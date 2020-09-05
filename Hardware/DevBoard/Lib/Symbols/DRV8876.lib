@@ -1,0 +1,57 @@
+EESchema-LIBRARY Version 2.4
+#encoding utf-8
+#
+# Texas Instruments DRV8876RGTR
+#
+DEF DRV8876RGTR U 0 40 Y Y 1 L N
+F0 "U" 0 200 50 H V L CNN 
+F1 "DRV8876RGTR" 0 300 50 H V L CNN 
+F2 "Texas_Instruments-RGT0016C-0-0-*" 0 400 50 H I L CNN 
+F3 "http://www.ti.com/lit/ds/symlink/drv8876.pdf" 0 500 50 H I L CNN 
+F4 "+125°C" 0 600 50 H I L CNN "ambient temperature range high"
+F5 "-40°C" 0 700 50 H I L CNN "ambient temperature range low"
+F6 "No" 0 800 50 H I L CNN "automotive"
+F7 "IC" 0 900 50 H I L CNN "category"
+F8 "Integrated Circuits (ICs)" 0 1000 50 H I L CNN "device class L1"
+F9 "Power Management ICs" 0 1100 50 H I L CNN "device class L2"
+F10 "Motor Drivers" 0 1200 50 H I L CNN "device class L3"
+F11 "1mm" 0 1300 50 H I L CNN "height"
+F12 "Yes" 0 1400 50 H I L CNN "lead free"
+F13 "6bcdda277d4bb50d" 0 1500 50 H I L CNN "library id"
+F14 "Texas Instruments" 0 1600 50 H I L CNN "manufacturer"
+F15 "+150°C" 0 1700 50 H I L CNN "max junction temp"
+F16 "37V" 0 1800 50 H I L CNN "max supply voltage"
+F17 "4.5V" 0 1900 50 H I L CNN "min supply voltage"
+F18 "Brushed" 0 2000 50 H I L CNN "motor type"
+F19 "595-DRV8876RGTR" 0 2100 50 H I L CNN "mouser part number"
+F20 "2" 0 2200 50 H I L CNN "number of outputs"
+F21 "3.5A" 0 2300 50 H I L CNN "output current"
+F22 "VQFN16" 0 2400 50 H I L CNN "package"
+F23 "Yes" 0 2500 50 H I L CNN "rohs"
+F24 "0mm" 0 2600 50 H I L CNN "standoff height"
+F25 "100kHz" 0 2700 50 H I L CNN "switching frequency"
+F26 "+150°C" 0 2800 50 H I L CNN "temperature range high"
+F27 "-40°C" 0 2900 50 H I L CNN "temperature range low"
+DRAW
+X OUT1 6 1600 0 100 L 40 40 1 1 O 
+X OUT2 8 1600 -100 100 L 40 40 1 1 O 
+X ~FAULT~ 2 1600 -300 100 L 40 40 1 1 O 
+X ~SLEEP~ 1 100 -600 100 R 40 40 1 1 I 
+X CPH 11 100 -300 100 R 40 40 1 1 W 
+X CPL 12 100 -400 100 R 40 40 1 1 W 
+X EN/IN1 15 100 -800 100 R 40 40 1 1 I 
+X IMODE 5 100 -1400 100 R 40 40 1 1 I 
+X IPROPI 4 100 -1800 100 R 40 40 1 1 O 
+X PH/IN2 16 100 -1000 100 R 40 40 1 1 I 
+X PMODE 14 100 -1200 100 R 40 40 1 1 I 
+X Thermal_Pad 17 1600 -1800 100 L 40 40 1 1 W 
+X VCP 10 100 -100 100 R 40 40 1 1 W 
+X VM 9 100 0 100 R 40 40 1 1 W 
+X VREF 3 100 -1600 100 R 40 40 1 1 I 
+X GND 13 1600 -1500 100 L 40 40 1 1 W 
+X PGND 7 1600 -1600 100 L 40 40 1 1 W 
+S 200 100 1500 -1900 1 1 0 f
+ENDDRAW
+ENDDEF
+#
+# End Library
