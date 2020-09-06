@@ -4,11 +4,11 @@ EELAYER END
 $Descr A4 11693 8268
 encoding utf-8
 Sheet 2 3
-Title ""
-Date ""
-Rev ""
-Comp ""
-Comment1 ""
+Title "G.I.S.Mo"
+Date "06/09"
+Rev "0.1"
+Comp "https://github.com/wandrade/gismo"
+Comment1 "Werner Thomassen Andrade"
 Comment2 ""
 Comment3 ""
 Comment4 ""
@@ -372,4 +372,17 @@ Wire Wire Line
 	6900 3200 6800 3200
 Text Label 6800 4900 0    50   ~ 0
 HeatPad
+Wire Wire Line
+	6800 4900 7200 4900
+$Comp
+L Connector:TestPoint HS1
+U 1 1 5F5E89A5
+P 7200 4900
+F 0 "HS1" V 7154 5088 50  0000 L CNN
+F 1 "HeatSink" V 7245 5088 50  0000 L CNN
+F 2 "TestPoint:TestPoint_Pad_1.0x1.0mm" H 7400 4900 50  0001 C CNN
+F 3 "~" H 7400 4900 50  0001 C CNN
+	1    7200 4900
+	0    1    1    0   
+$EndComp
 $EndSCHEMATC
