@@ -1,6 +1,4 @@
-GISMo
-
-# Introduction
+# G.I.S.Mo
 After a long search, I have failed to find a servo motor that does everything I need for my projects that is also cheap(ish) and fully programmable (say no to closed source stuff whenever you can).
 
 Well, thus was born the idea of GISMo (Greatly Inteligent Servo Motor). This project aims to develop a board that can be used to replace the vanilla servo driver boards that comes with cheaper ones such as MG995 and MG996R, giving it more power and making it more usefull for distributed controll projects:
