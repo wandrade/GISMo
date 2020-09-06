@@ -4,11 +4,11 @@ EELAYER END
 $Descr A4 11693 8268
 encoding utf-8
 Sheet 3 3
-Title ""
-Date ""
-Rev ""
-Comp ""
-Comment1 ""
+Title "G.I.S.Mo Dev board"
+Date "2020-09-06"
+Rev "0.1"
+Comp "https://github.com/wandrade/gismo"
+Comment1 "Werner Thomassen Andrade"
 Comment2 ""
 Comment3 ""
 Comment4 ""

@@ -1,0 +1,7 @@
+EESchema-DOCLIB  Version 2.0
+#
+$CMP DRV8876RGTR
+D DRV8876RGTR
+F http://www.ti.com/lit/ds/symlink/drv8876.pdf
+$ENDCMP
+# end doc library
