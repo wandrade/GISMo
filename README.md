@@ -48,6 +48,7 @@ Each sub-thing will have its own sub-version, and once I have a combination of t
 --
 
 ## GISMo Board
+- [Interactive BOM](http://htmlpreview.github.io/?https://github.com/wandrade/GISMo/blob/develop/Hardware/GISMoBoard/bom/ibom.html)
 
 ![](Hardware/GISMoBoard/SmartServo_front.png) | ![](Hardware/GISMoBoard/SmartServo_back.png)
 :-------------------------:|:-------------------------:
@@ -63,6 +64,8 @@ Each sub-thing will have its own sub-version, and once I have a combination of t
 
 
 ## Development Board
+- [Interactive BOM](http://htmlpreview.github.io/?https://github.com/wandrade/GISMo/blob/develop/Hardware/DevBoard/bom/ibom.html)
+
 This board is meant for circuit testing and ease of debugging.
 ![](Hardware/DevBoard/SmartServo_Front.png)
 
