@@ -44,7 +44,7 @@ Each sub-thing will have its own sub-version, and once I have a combination of t
 
 ## GISMo Board
 
-![](Hardware/GISMo%20Board/SmartServo_Front.png) | ![](Hardware/GISMo%20Board/SmartServo_Back.png)
+![](Hardware/GISMoBoard/SmartServo_Front.png) | ![](Hardware/GISMoBoard/SmartServo_Back.png)
 :-------------------------:|:-------------------------:
 - 0.0.1 - Copy of dev board with a few changes to reduce space usage
     - Only one I2C/Power plug
