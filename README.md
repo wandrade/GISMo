@@ -1,18 +1,33 @@
 # G.I.S.Mo
+
+
+
+![](Hardware/BoardMount.png "Board Mount")  |  ![](Hardware/BackLid.png "G.I.S.Mo Board") | ![](Hardware/Lid.png "Lid")
+:-------------------------:|:-------------------------:|:-------------------------:
+
 After a long search, I have failed to find a servo motor that does everything I need for my projects that is also cheap(ish) and fully programmable (say no to closed source stuff whenever you can).
 
 Well, thus was born the idea of GISMo (Greatly Inteligent Servo Motor). This project aims to develop a board that can be used to replace the vanilla servo driver boards that comes with cheaper ones such as MG995 and MG996R, giving it more power and making it more usefull for distributed controll projects:
 
-Amongst the desired dream come true features we have the following:
-- Embedded MCU (STM32F302 powered!) for controll loops (with multiple modes to choose from)
+Wishlist:
+- Embedded MCU (STM32F302 powered!) 
+- Control:
     - Simple position PID loop
     - MISO controller for speed and position simultaniously (Probably a state space controller)
     - Torque controll loop
+    - Trapezoidal position curve following
+- Configurable parameters
+    - 
 - I2C interface (or if you please, just change a bit the circuit to use whatever interface you want)
 - Current sensing (for torque controll and power management features)
 - Programable LED's (because they are cool)
 - Absolute magnetic encoder (at least 12bits)
 - Free range of movement (180 degrees is just not enough)
+- ROS2 Interface:
+    - Hot plug I2C device detection
+    - Configuration via YAML and ROS Param
+    - up to 16 Individually addressed servos
+
 
 # Organization
 The project contains 3 main blocks: first is the hardware, using [KiCad](https://kicad-pcb.org/), in the Hardware folder you will find 2 subfolders, one for the dev board, which is a big version of the board with some more stuff to facilitate firmware development and debugging, and a second one that contains the GISMo board that actually fits in the servo (to be made).
@@ -24,15 +39,31 @@ Now this is a bit tricky. I have 3 things to version and no interest in havving 
 
 Each sub-thing will have its own sub-version, and once I have a combination of the 3 of them that kind of works, I will merge it into the master branch and tag it with a overall version of the repo (if that makes sense).
 
+## Firmware
+--
+
+## GISMo Board
+
+![](Hardware/GISMo%20Board/SmartServo_Front.png) | ![](Hardware/GISMo%20Board/SmartServo_Back.png)
+:-------------------------:|:-------------------------:
+- 0.0.1 - Copy of dev board with a few changes to reduce space usage
+    - Only one I2C/Power plug
+    - Replaced Address header pins by solder jumpers
+    - Motor and PWM sensor connectors replaced with solder pads
+    - Included a heat sink pad under the motor driver
+    - Removed Crystal and oscilator
+    - Reduced LED packages
+    - Removed Debug connector
+    - Removed reset button
+
 
 ## Development Board
+This board is meant for circuit testing and ease of debugging.
+![](Hardware/DevBoard/SmartServo_Front.png)
+
 - 0.0.1 - Initial proposal board for development board schematic and layout.
     - [STM32F302K8 MCU](https://www.st.com/en/microcontrollers-microprocessors/stm32f302k8.html) - Small package and seemingly enough processing power for everything we need.
     - [DRV8876RGTR Driver](https://www.ti.com/store/ti/en/p/product/?p=DRV8876RGTR) - Has more than double the current needed and provides an inbuilt current sensing solution (hopefully good enough)
-## GISMo Board
---
-## Firmware
---
 
 # Costs
 Here I will keep track of how much you have to pay for each of the more expensive bits so you have an idea of how much a working GISMo will cost you.
