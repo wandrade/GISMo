@@ -10,23 +10,28 @@ After a long search, I have failed to find a servo motor that does everything I 
 Well, thus was born the idea of GISMo (Greatly Inteligent Servo Motor). This project aims to develop a board that can be used to replace the vanilla servo driver boards that comes with cheaper ones such as MG995 and MG996R, giving it more power and making it more usefull for distributed controll projects:
 
 Wishlist:
-- Embedded MCU (STM32F302 powered!) 
-- Control:
-    - Simple position PID loop
-    - MISO controller for speed and position simultaniously (Probably a state space controller)
-    - Torque controll loop
-    - Trapezoidal position curve following
-- Configurable parameters
-    - 
-- I2C interface (or if you please, just change a bit the circuit to use whatever interface you want)
-- Current sensing (for torque controll and power management features)
-- Programable LED's (because they are cool)
-- Absolute magnetic encoder (at least 12bits)
-- Free range of movement (180 degrees is just not enough)
-- ROS2 Interface:
-    - Hot plug I2C device detection
-    - Configuration via YAML and ROS Param
-    - up to 16 Individually addressed servos
+- [x] Embedded MCU (STM32F302 powered!) 
+- [x] Current sensing (for torque controll and power management features) 
+- [ ] I2C interface (or if you please, just change a bit the circuit to use whatever interface you want)
+- [x] Programable LED's (because they are cool)
+- [x] Absolute magnetic encoder (at least 12bits)
+- [x] Free range of movement (180 degrees is just not enough)
+- [ ] Control:
+    - [ ] Simple position PID loop
+    - [ ] MISO controller for speed and position simultaniously (Probably a state space controller)
+    - [ ] Torque controll loop
+    - [ ] Trapezoidal position curve following
+- [ ] Configurable parameters
+    - [ ] Speed/Position/Current limit
+    - [ ] Controller mode
+    - [ ] Configurable break zone (turn on break when position reaches its demand and settles)
+    - [ ] Multiturn counter
+    - [ ] Controller gains (PID and state space gain matrix)
+    - [ ]
+- [ ] ROS2 Interface node:
+    - [ ] Hot plug I2C device detection
+    - [ ] Configuration via YAML and ROS Param
+    - [ ] up to 16 Individually addressed servos
 
 
 # Organization
