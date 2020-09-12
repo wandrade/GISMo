@@ -27,7 +27,6 @@ Wishlist:
     - [ ] Configurable break zone (turn on break when position reaches its demand and settles)
     - [ ] Multiturn counter
     - [ ] Controller gains (PID and state space gain matrix)
-    - [ ]
 - [ ] ROS2 Interface node:
     - [ ] Hot plug I2C device detection
     - [ ] Configuration via YAML and ROS Param
