@@ -1,8 +1,9 @@
-#include "position_encoder.h"
+#include "encoder.h"
 
 extern POSITION_STRUCT position;
+extern SPEED_STRUCT speed;
 
-void initialize_position(){
+void initialize_encoder(){
 
 }
 
@@ -26,7 +27,7 @@ void update_position_raw(TIM_HandleTypeDef* htim){
 			position.multiturn_counter--;
 		}
 		// Convert Duty cycle into useful stuff
-		update_position_rad();
+		update_position_speed();
 	}
 
 }
@@ -42,20 +43,27 @@ void update_position_raw(TIM_HandleTypeDef* htim){
 
 // The max value position.raw can be is the max time it takes between two rising edges (refresh period of the sensor) minus the minimal dead time of the line (the 8 exit clocks of the signal)
 // This value is directly measured by CCR4 since we are reseting the timer at each falling edge
-void update_position_rad(){
+void update_position_speed(){
 	// From MAX_POSITION_TICK_COUNT to 4119 as stated in datasheet
 	uint32_t scaled_raw = CLOCK_TICKS_PER_PWM_CYCLE*position.raw/position.CCR4;
 	if (scaled_raw > 12){
+		// Update position single turn
 		position.valid = 1;
 		position.rad_prev = position.rad;
 		position.rad = (float)(scaled_raw - 15)*PWM_TO_RADIANS_SCALE;
+
+		// Update position multiturn
+		position.rad_multiturn_prev = position.rad_multiturn;
 		position.rad_multiturn = position.multiturn_counter*2*PI + position.rad;
+
+		// Update speed
+		speed.rad_sec_prev = speed.rad_sec;
+		speed.rad_sec = (position.rad_multiturn - position.rad_multiturn_prev) * ENCODER_REFRESH_RATE;
 	} else {
 		position.valid = 0;
 	}
 
 }
-
 
 
 
