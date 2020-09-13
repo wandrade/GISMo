@@ -68,7 +68,12 @@ void StartDefaultTask(void const * argument);
 
 /* Private user code ---------------------------------------------------------*/
 /* USER CODE BEGIN 0 */
-
+void HAL_TIM_IC_CaptureCallback(TIM_HandleTypeDef* htim)
+{
+	// PWM sensor falling edge
+	if(htim->Instance == TIM1 && htim->Channel == HAL_TIM_ACTIVE_CHANNEL_4)
+		update_position_raw(htim);
+}
 /* USER CODE END 0 */
 
 /**
@@ -104,7 +109,9 @@ int main(void)
   MX_TIM1_Init();
   MX_TIM2_Init();
   /* USER CODE BEGIN 2 */
-
+  // Rising and falling edge of PWM sensor
+  HAL_TIM_IC_Start_IT(&htim1, TIM_CHANNEL_3);
+  HAL_TIM_IC_Start_IT(&htim1, TIM_CHANNEL_4);
   /* USER CODE END 2 */
 
   /* USER CODE BEGIN RTOS_MUTEX */
@@ -347,7 +354,6 @@ static void MX_TIM1_Init(void)
     Error_Handler();
   }
   /* USER CODE BEGIN TIM1_Init 2 */
-
   /* USER CODE END TIM1_Init 2 */
 
 }
@@ -464,8 +470,8 @@ void StartDefaultTask(void const * argument)
   /* Infinite loop */
   for(;;)
   {
-    osDelay(1000);
-    HAL_GPIO_TogglePin(LED_G_GPIO_Port, LED_G_Pin);
+    osDelay(2000);
+//    HAL_GPIO_TogglePin(LED_G_GPIO_Port, LED_G_Pin);
   }
   /* USER CODE END 5 */
 }
