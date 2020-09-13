@@ -112,6 +112,7 @@ int main(void)
   // Rising and falling edge of PWM sensor
   HAL_TIM_IC_Start_IT(&htim1, TIM_CHANNEL_3);
   HAL_TIM_IC_Start_IT(&htim1, TIM_CHANNEL_4);
+  initialize_encoder();
   /* USER CODE END 2 */
 
   /* USER CODE BEGIN RTOS_MUTEX */

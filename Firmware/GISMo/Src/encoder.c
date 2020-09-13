@@ -4,7 +4,9 @@ extern POSITION_STRUCT position;
 extern SPEED_STRUCT speed;
 
 void initialize_encoder(){
-
+	speed.filter_size = 50;
+	position.spike_limit = 0.1;
+	position.spike_counter = 1;
 }
 
 void update_position_raw(TIM_HandleTypeDef* htim){
@@ -14,18 +16,9 @@ void update_position_raw(TIM_HandleTypeDef* htim){
 	position.CCR4 = htim->Instance->CCR4; 	// Falling edge time (channel 4 interrupt time)
 
 	// Falling this might happen when position is close to 360 degrees and there is not enough time to process interrupt
-	if(position.CCR4 >= position.CCR3){
-		position.raw_prev = position.raw;
+	if(position.CCR4 >= position.CCR3 && position.CCR4 - position.CCR3 < 64000){
 		// Calculate PWM duty cycle
 		position.raw = position.CCR4 - position.CCR3;
-
-		// Increase multiturn counter when completed a turn
-		if(position.raw_prev > 50000 && position.raw < 10000){
-			position.multiturn_counter++;
-		}
-		else if (position.raw_prev < 10000 && position.raw > 50000){
-			position.multiturn_counter--;
-		}
 		// Convert Duty cycle into useful stuff
 		update_position_speed();
 	}
@@ -46,19 +39,55 @@ void update_position_raw(TIM_HandleTypeDef* htim){
 void update_position_speed(){
 	// From MAX_POSITION_TICK_COUNT to 4119 as stated in datasheet
 	uint32_t scaled_raw = CLOCK_TICKS_PER_PWM_CYCLE*position.raw/position.CCR4;
-	if (scaled_raw > 12){
+	if (scaled_raw > 12){ // If its a valid reading
+
 		// Update position single turn
-		position.valid = 1;
 		position.rad_prev = position.rad;
 		position.rad = (float)(scaled_raw - 15)*PWM_TO_RADIANS_SCALE;
+
+		// Increase multiturn counter when completed a turn
+		if(position.rad_prev > 5.3 && position.rad < 1.0){
+			position.multiturn_counter++;
+		}
+		else if (position.rad_prev < 1.0 && position.rad > 5.3){
+			position.multiturn_counter--;
+		}
 
 		// Update position multiturn
 		position.rad_multiturn_prev = position.rad_multiturn;
 		position.rad_multiturn = position.multiturn_counter*2*PI + position.rad;
 
-		// Update speed
+		// Multiturn spike filter
+		if(abs(position.rad_multiturn - position.rad_multiturn_prev) > position.spike_limit && !position.spike_counter){
+			position.rad_multiturn = position.rad_multiturn_prev;
+			HAL_GPIO_TogglePin(LED_R_GPIO_Port, LED_R_Pin);
+			position.spike_counter = 1;
+		}
+		else{
+			position.spike_counter = 0;
+		}
+//
+//		// Update speed
 		speed.rad_sec_prev = speed.rad_sec;
-		speed.rad_sec = (position.rad_multiturn - position.rad_multiturn_prev) * ENCODER_REFRESH_RATE;
+		speed.rad_sec_raw = (position.rad_multiturn - position.rad_multiturn_prev) * ENCODER_REFRESH_RATE;
+//
+//		// Speed filter
+//		int i;
+//		for(i = 0; i < speed.filter_size; i++){
+//			// Move all measures 1 position to the left on the buffer vector
+//			speed.buffer[i] = speed.buffer[i+1];
+//		}
+//		speed.buffer[i-1] = speed.rad_sec_raw;
+//
+//		// Calculate average
+//		speed.rad_sec = 0;
+//		for(i = 0; i < speed.filter_size; i++){
+//			// Move all measures 1 position to the left on the buffer vector
+//			speed.rad_sec += speed.buffer[i];
+//		}
+//		speed.rad_sec /= speed.filter_size;
+		position.valid = 1;
+
 	} else {
 		position.valid = 0;
 	}
