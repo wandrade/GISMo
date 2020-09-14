@@ -29,7 +29,7 @@ extern "C" {
 
 /* Includes ------------------------------------------------------------------*/
 #include "stm32f3xx_hal.h"
-
+#include "helper_functions.h"
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
 #include <encoder.h>
@@ -87,7 +87,8 @@ void Error_Handler(void);
 #define AD3_Pin GPIO_PIN_5
 #define AD3_GPIO_Port GPIOB
 /* USER CODE BEGIN Private defines */
-
+// Define IRQ timer interupt handler
+void TIM1_CC_IRQHandler(void);
 /* USER CODE END Private defines */
 
 #ifdef __cplusplus

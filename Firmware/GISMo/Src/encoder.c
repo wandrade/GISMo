@@ -2,6 +2,55 @@
 
 extern POSITION_STRUCT position;
 extern SPEED_STRUCT speed;
+extern ENCODER_STRUCT encoder;
+
+
+
+
+void update_encoder(TIM_HandleTypeDef* htim){
+	// Reset timer ASAP so we can consider 0 as the beggining of the period,
+	// falling edge time as the end of duty cycle and rising time (from next cycle) as the total period time
+	encoder.t_rising_edge = htim->Instance->CCR3;
+	encoder.t_falling_edge = htim->Instance->CCR4;
+
+	// Get number of clocks of the encoder (4119 per full cycle)
+	encoder.pwm_clocks = encoder.t_falling_edge*ENCODER_CLOCKS_PER_CYCLE/encoder.t_rising_edge;
+
+
+	if(encoder.pwm_clocks >= ENCODER_MIN_VALID_CLOCK_NUM && encoder.pwm_clocks <= ENCODER_MAX_VALID_CLOCK_NUM){
+		// Reset error flag
+		encoder.error = 0;
+
+		// Calculate singleturn
+		encoder.single_prev = encoder.single;
+		encoder.single = encoder.pwm_clocks - ENCODER_MIN_VALID_CLOCK_NUM;
+
+		// Multiturn count
+		if(encoder.single_prev > 3000 && encoder.single < 1000) // also considers if last measure wasn't an error
+			encoder.multiturn_counter++; // positive turn - singleturn goes from a big number to a very small one
+		else if (encoder.single_prev < 1000 && encoder.single > 3000) // also considers if last measure wasn't an error
+			encoder.multiturn_counter--; // negative turn - singleturn goes from a small number to a very big one
+
+		// Concatenate singleturn and multiturn counters
+		encoder.raw = (encoder.multiturn_counter << 12) | encoder.single;
+
+	} else {
+		encoder.error++; // Counts consecutive errors;
+		if(!encoder.error) encoder.error++; // If overflows, make sure it goes from 0 to 1 again
+	}
+
+}
+
+
+
+
+
+// Get period in seconds
+//	encoder.period = (float)encoder.t_rising_edge/(float)TIMER_FREQUENCY;
+
+
+
+
 
 void initialize_encoder(){
 	position.filter_size = 5;		// How many readings are averaged for the filtered position reading
