@@ -4,9 +4,9 @@ extern POSITION_STRUCT position;
 extern SPEED_STRUCT speed;
 
 void initialize_encoder(){
-	speed.filter_size = 50;
-	position.spike_limit = 0.1;
-	position.spike_counter = 1;
+	position.filter_size = 5;		// How many readings are averaged for the filtered position reading
+	position.spike_limit = 0.1;		// Max allowed position variation (bigger than this will be discarded)
+	position.spike_counter = 5;		// How many spikes in a row can the system accept before ignoring the spike filter
 }
 
 void update_position_raw(TIM_HandleTypeDef* htim){
@@ -58,20 +58,39 @@ void update_position_speed(){
 		position.rad_multiturn = position.multiturn_counter*2*PI + position.rad;
 
 		// Multiturn spike filter
-		if(abs(position.rad_multiturn - position.rad_multiturn_prev) > position.spike_limit && !position.spike_counter){
+		if(fabs(position.rad_multiturn - position.rad_multiturn_prev) > position.spike_limit && position.spike_counter < 5){
 			position.rad_multiturn = position.rad_multiturn_prev;
-			HAL_GPIO_TogglePin(LED_R_GPIO_Port, LED_R_Pin);
-			position.spike_counter = 1;
+			position.spike_counter++;
 		}
 		else{
 			position.spike_counter = 0;
 		}
-//
-//		// Update speed
+
+		// Position filter
+		if(position.buffer_head < position.filter_size){
+			position.buffer[position.buffer_head] = position.rad_multiturn;
+			position.buffer_head++;
+		}
+		else {
+			position.rad_filtered_prev = position.rad_filtered;
+			position.rad_filtered = 0;
+			for(int i = 0; i < position.filter_size; i++){
+				position.rad_filtered += position.buffer[i];
+			}
+			position.rad_filtered /= position.filter_size;
+			position.buffer_head = 0;
+		}
+
+		// Update speed
 		speed.rad_sec_prev = speed.rad_sec;
 		speed.rad_sec_raw = (position.rad_multiturn - position.rad_multiturn_prev) * ENCODER_REFRESH_RATE;
-//
-//		// Speed filter
+
+
+		speed.rad_sec = (position.rad_filtered - position.rad_filtered_prev) * ENCODER_REFRESH_RATE;
+
+		// Speed filter
+		// Put value in buffer if there was no problem with multiturn
+
 //		int i;
 //		for(i = 0; i < speed.filter_size; i++){
 //			// Move all measures 1 position to the left on the buffer vector
@@ -86,6 +105,7 @@ void update_position_speed(){
 //			speed.rad_sec += speed.buffer[i];
 //		}
 //		speed.rad_sec /= speed.filter_size;
+
 		position.valid = 1;
 
 	} else {
