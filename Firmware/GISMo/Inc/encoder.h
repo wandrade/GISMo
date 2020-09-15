@@ -35,33 +35,33 @@ typedef struct {
 } ENCODER_STRUCT;
 ENCODER_STRUCT encoder;
 
-typedef struct {
-	uint32_t raw;
-	uint32_t raw_prev;
-	int32_t multiturn_counter;
-	uint32_t CCR3, CCR4;
-	uint8_t valid;
-	float rad, rad_prev;
-	float rad_multiturn, rad_multiturn_prev;
-	float spike_limit;
-	uint8_t spike_counter;
-
-	// Position filter
-	uint8_t filter_size, buffer_head;
-	float rad_filtered, rad_filtered_prev;
-	float buffer[50];
-
-} POSITION_STRUCT;
-POSITION_STRUCT position;
-
-typedef struct{
-	float rad_sec_raw;
-	float rad_sec, rad_sec_prev;
-} SPEED_STRUCT;
-SPEED_STRUCT speed;
-
-void initialize_encoder();
-void update_position_raw(TIM_HandleTypeDef* htim);
-void update_position_speed();
+//typedef struct {
+//	uint32_t raw;
+//	uint32_t raw_prev;
+//	int32_t multiturn_counter;
+//	uint32_t CCR3, CCR4;
+//	uint8_t valid;
+//	float rad, rad_prev;
+//	float rad_multiturn, rad_multiturn_prev;
+//	float spike_limit;
+//	uint8_t spike_counter;
+//
+//	// Position filter
+//	uint8_t filter_size, buffer_head;
+//	float rad_filtered, rad_filtered_prev;
+//	float buffer[50];
+//
+//} POSITION_STRUCT;
+//POSITION_STRUCT position;
+//
+//typedef struct{
+//	float rad_sec_raw;
+//	float rad_sec, rad_sec_prev;
+//} SPEED_STRUCT;
+//SPEED_STRUCT speed;
+//
+//void initialize_encoder();
+//void update_position_raw(TIM_HandleTypeDef* htim);
+//void update_position_speed();
 void update_encoder(TIM_HandleTypeDef* htim);
 #endif

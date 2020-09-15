@@ -131,8 +131,8 @@ int main(void)
   /* USER CODE BEGIN 2 */
   HAL_TIM_IC_Start_IT(&htim1, TIM_CHANNEL_3); // Rising edge
   HAL_TIM_IC_Start(&htim1, TIM_CHANNEL_4); // Falling Edge - Initialize interrupt capture but no callback function (We only need the CCR4 value)
-  initialize_encoder();
-  enable_CPU_count();
+//  initialize_encoder();
+//  enable_CPU_count();
   /* USER CODE END 2 */
 
   /* USER CODE BEGIN RTOS_MUTEX */
