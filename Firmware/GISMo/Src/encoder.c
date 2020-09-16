@@ -1,8 +1,28 @@
 #include "encoder.h"
 
-//extern POSITION_STRUCT position;
-//extern SPEED_STRUCT speed;
 extern ENCODER_STRUCT encoder;
+extern TIM_HandleTypeDef htim1;
+
+
+void init_encoder(){
+	  HAL_TIM_IC_Start_IT(&htim1, TIM_CHANNEL_3); // Rising edge
+	  HAL_TIM_IC_Start(&htim1, TIM_CHANNEL_4); // Falling Edge - Initialize interrupt capture but no callback function (We only need the CCR4 value)
+}
+
+// Define interupt function
+void TIM1_CC_IRQHandler(void)
+{
+	// Check if it comes from channel3
+	if(__HAL_TIM_GET_IT_SOURCE(&htim1, TIM_IT_CC3) != RESET){
+		// Clear interrupt flag on channel 3
+		__HAL_TIM_CLEAR_IT(&htim1, TIM_IT_CC3);
+		// Set counter to 48 which is how long it takes for this function to zero (to its like setting it to zero as soon as the PWM sensor rising edge is detected) with a bit of tweaking
+		// until i got some known values (e.g. 12 when no magnet is close to the encoder)
+		// This value was obtained experimentally by measuring the number of CPU clocks it took to run all these functions (https://www.embedded-computing.com/articles/measuring-code-execution-time-on-arm-cortex-m-mcus)
+		__HAL_TIM_SET_COUNTER(&htim1, 65);
+		update_encoder(&htim1);
+	}
+}
 
 void update_encoder(TIM_HandleTypeDef* htim){
 	// Reset timer ASAP so we can consider 0 as the beggining of the period,
@@ -37,6 +57,11 @@ void update_encoder(TIM_HandleTypeDef* htim){
 	}
 
 }
+
+
+//extern POSITION_STRUCT position;
+//extern SPEED_STRUCT speed;
+
 
 // Get period in seconds
 //	encoder.period = (float)encoder.t_rising_edge/(float)TIMER_FREQUENCY;

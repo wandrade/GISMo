@@ -12,14 +12,13 @@
 
 
 
-
-
-#define ENCODER_REFRESH_RATE		1000		// in Hz
-#define CLOCK_TICKS_PER_PWM_CYCLE 	4111
-#define PWM_TO_RADIANS_SCALE		0.00153399	// Convert from 12bit raw to and angle in radians
+//
+//
+//#define ENCODER_REFRESH_RATE		1000		// in Hz
+//#define CLOCK_TICKS_PER_PWM_CYCLE 	4111
+//#define PWM_TO_RADIANS_SCALE		0.00153399	// Convert from 12bit raw to and angle in radians
 
 #include "stm32f3xx_hal.h"
-#include "main.h"
 #include "helper_functions.h"
 #include <math.h>
 

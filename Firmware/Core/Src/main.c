@@ -69,31 +69,6 @@ void StartDefaultTask(void const * argument);
 /* Private user code ---------------------------------------------------------*/
 /* USER CODE BEGIN 0 */
 
-
-
-void TIM1_CC_IRQHandler(void)
-{
-	// Check if it comes from channel3
-	if(__HAL_TIM_GET_IT_SOURCE(&htim1, TIM_IT_CC3) != RESET){
-		// Clear interrupt flag on channel 3
-		__HAL_TIM_CLEAR_IT(&htim1, TIM_IT_CC3);
-		// Set counter to 48 which is how long it takes for this function to zero (to its like setting it to zero as soon as the PWM sensor rising edge is detected) with a bit of tweaking
-		// until i got some known values (e.g. 12 when no magnet is close to the encoder)
-		// This value was obtained experimentally by measuring the number of CPU clocks it took to run all these functions (https://www.embedded-computing.com/articles/measuring-code-execution-time-on-arm-cortex-m-mcus)
-		__HAL_TIM_SET_COUNTER(&htim1, 65);
-
-		// htim1.Channel = HAL_TIM_ACTIVE_CHANNEL_3;
-		// Check if its a input capture interrupt
-//		if ((htim1.Instance->CCMR2 & TIM_CCMR2_CC3S) != 0x00U)
-//		{
-//			update_position_raw(htim);
-		update_encoder(&htim1);
-//		HAL_GPIO_TogglePin(LED_B_GPIO_Port, LED_B_Pin);
-//		}
-		// htim1.Channel = HAL_TIM_ACTIVE_CHANNEL_CLEARED;
-	}
-}
-
 /* USER CODE END 0 */
 
 /**
@@ -129,8 +104,8 @@ int main(void)
   MX_TIM1_Init();
   MX_TIM2_Init();
   /* USER CODE BEGIN 2 */
-  HAL_TIM_IC_Start_IT(&htim1, TIM_CHANNEL_3); // Rising edge
-  HAL_TIM_IC_Start(&htim1, TIM_CHANNEL_4); // Falling Edge - Initialize interrupt capture but no callback function (We only need the CCR4 value)
+  init_driver();
+  init_encoder();
 //  initialize_encoder();
 //  enable_CPU_count();
   /* USER CODE END 2 */
@@ -400,7 +375,7 @@ static void MX_TIM2_Init(void)
   htim2.Instance = TIM2;
   htim2.Init.Prescaler = 0;
   htim2.Init.CounterMode = TIM_COUNTERMODE_UP;
-  htim2.Init.Period = 4294967295;
+  htim2.Init.Period = 1000;
   htim2.Init.ClockDivision = TIM_CLOCKDIVISION_DIV1;
   htim2.Init.AutoReloadPreload = TIM_AUTORELOAD_PRELOAD_DISABLE;
   if (HAL_TIM_PWM_Init(&htim2) != HAL_OK)
@@ -485,13 +460,29 @@ static void MX_GPIO_Init(void)
   * @retval None
   */
 /* USER CODE END Header_StartDefaultTask */
+uint32_t pwm_value, step;
 void StartDefaultTask(void const * argument)
 {
   /* USER CODE BEGIN 5 */
   /* Infinite loop */
   for(;;)
   {
-    osDelay(2000);
+	  // Wake up
+	  HAL_GPIO_WritePin(nSleep_GPIO_Port, nSleep_Pin, 1);
+
+	  if(HAL_GPIO_ReadPin(nFault_GPIO_Port, nFault_Pin)){
+		  HAL_GPIO_WritePin(LED_G_GPIO_Port, LED_G_Pin, 1);
+	  } else {
+		  HAL_GPIO_WritePin(LED_G_GPIO_Port, LED_G_Pin, 0);
+	  }
+
+
+	  if(pwm_value == 0) step = 10;
+	  if(pwm_value == 1000) step = -10;
+	  pwm_value += step;
+	  pwm_setvalue(pwm_value);
+
+	  osDelay(100);
 //    HAL_GPIO_TogglePin(LED_G_GPIO_Port, LED_G_Pin);
   }
   /* USER CODE END 5 */
