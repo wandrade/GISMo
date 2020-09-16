@@ -29,10 +29,11 @@ extern "C" {
 
 /* Includes ------------------------------------------------------------------*/
 #include "stm32f3xx_hal.h"
-#include "helper_functions.h"
+
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
 #include <encoder.h>
+#include <driver.h>
 /* USER CODE END Includes */
 
 /* Exported types ------------------------------------------------------------*/
