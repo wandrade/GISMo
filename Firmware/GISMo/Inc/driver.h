@@ -9,6 +9,8 @@
 TIM_OC_InitTypeDef pwm_config;
 
 void init_driver();
-void pwm_setvalue(uint16_t value);
+void enable_driver();
+void disable_driver();
+void pwm_set_ouput(uint16_t dutyCycle, uint8_t direction);
 
 #endif

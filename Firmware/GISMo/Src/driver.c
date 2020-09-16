@@ -1,6 +1,7 @@
 //driver.c
 
 #include "driver.h"
+#include "main.h"
 
 extern TIM_OC_InitTypeDef pwm_config;
 extern TIM_HandleTypeDef htim2;
@@ -16,7 +17,22 @@ void init_driver(){
     HAL_TIM_PWM_Start(&htim2, TIM_CHANNEL_4);
 }
 
-void pwm_setvalue(uint16_t value)
-{
-	TIM2->CCR4 = value;
+void enable_driver(){
+	// Set DC to zero
+	TIM2->CCR4 = 0;
+	// Wake up
+	HAL_GPIO_WritePin(nSleep_GPIO_Port, nSleep_Pin, 1);
 }
+
+void disable_driver(){
+	// Set DC to zero
+	TIM2->CCR4 = 0;
+	// Wake up
+	HAL_GPIO_WritePin(nSleep_GPIO_Port, nSleep_Pin, 0);
+}
+
+void pwm_set_ouput(uint16_t dutyCycle, uint8_t direction){
+	TIM2->CCR4 = dutyCycle;
+	HAL_GPIO_WritePin(Direction_GPIO_Port, Direction_Pin, direction);
+}
+

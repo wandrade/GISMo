@@ -420,14 +420,19 @@ static void MX_GPIO_Init(void)
   HAL_GPIO_WritePin(GPIOA, Direction_Pin|nSleep_Pin|LED_B_Pin|LED_G_Pin
                           |LED_R_Pin, GPIO_PIN_RESET);
 
-  /*Configure GPIO pins : Direction_Pin nSleep_Pin LED_B_Pin LED_G_Pin
-                           LED_R_Pin */
-  GPIO_InitStruct.Pin = Direction_Pin|nSleep_Pin|LED_B_Pin|LED_G_Pin
-                          |LED_R_Pin;
+  /*Configure GPIO pins : Direction_Pin LED_B_Pin LED_G_Pin LED_R_Pin */
+  GPIO_InitStruct.Pin = Direction_Pin|LED_B_Pin|LED_G_Pin|LED_R_Pin;
   GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
   GPIO_InitStruct.Pull = GPIO_NOPULL;
   GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
   HAL_GPIO_Init(GPIOA, &GPIO_InitStruct);
+
+  /*Configure GPIO pin : nSleep_Pin */
+  GPIO_InitStruct.Pin = nSleep_Pin;
+  GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
+  GPIO_InitStruct.Pull = GPIO_PULLDOWN;
+  GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
+  HAL_GPIO_Init(nSleep_GPIO_Port, &GPIO_InitStruct);
 
   /*Configure GPIO pin : nFault_Pin */
   GPIO_InitStruct.Pin = nFault_Pin;
@@ -451,6 +456,7 @@ static void MX_GPIO_Init(void)
 
 /* USER CODE BEGIN 4 */
 
+uint16_t turns, pwm_value, dir, step;
 /* USER CODE END 4 */
 
 /* USER CODE BEGIN Header_StartDefaultTask */
@@ -460,15 +466,18 @@ static void MX_GPIO_Init(void)
   * @retval None
   */
 /* USER CODE END Header_StartDefaultTask */
-uint32_t pwm_value, step;
 void StartDefaultTask(void const * argument)
 {
   /* USER CODE BEGIN 5 */
   /* Infinite loop */
+	turns = 0;
+  enable_driver();
   for(;;)
   {
-	  // Wake up
-	  HAL_GPIO_WritePin(nSleep_GPIO_Port, nSleep_Pin, 1);
+	  if(turns > 6){
+		  disable_driver();
+	  }
+
 
 	  if(HAL_GPIO_ReadPin(nFault_GPIO_Port, nFault_Pin)){
 		  HAL_GPIO_WritePin(LED_G_GPIO_Port, LED_G_Pin, 1);
@@ -477,12 +486,17 @@ void StartDefaultTask(void const * argument)
 	  }
 
 
-	  if(pwm_value == 0) step = 10;
+	  if(pwm_value == 0){
+		  step = 10;
+		  dir = !dir;
+
+		  turns++;
+	  }
 	  if(pwm_value == 1000) step = -10;
 	  pwm_value += step;
-	  pwm_setvalue(pwm_value);
+	  pwm_set_ouput(pwm_value, dir);
 
-	  osDelay(100);
+	  osDelay(200);
 //    HAL_GPIO_TogglePin(LED_G_GPIO_Port, LED_G_Pin);
   }
   /* USER CODE END 5 */

@@ -34,6 +34,11 @@ typedef struct {
 } ENCODER_STRUCT;
 ENCODER_STRUCT encoder;
 
+
+
+void init_encoder();
+void update_encoder(TIM_HandleTypeDef* htim);
+
 //typedef struct {
 //	uint32_t raw;
 //	uint32_t raw_prev;
@@ -62,5 +67,4 @@ ENCODER_STRUCT encoder;
 //void initialize_encoder();
 //void update_position_raw(TIM_HandleTypeDef* htim);
 //void update_position_speed();
-void update_encoder(TIM_HandleTypeDef* htim);
 #endif
