@@ -56,7 +56,9 @@
 /* USER CODE END 0 */
 
 /* External variables --------------------------------------------------------*/
+extern ADC_HandleTypeDef hadc1;
 extern TIM_HandleTypeDef htim1;
+extern TIM_HandleTypeDef htim2;
 extern TIM_HandleTypeDef htim6;
 
 /* USER CODE BEGIN EV */
@@ -160,6 +162,20 @@ void DebugMon_Handler(void)
 /******************************************************************************/
 
 /**
+  * @brief This function handles ADC1 interrupt.
+  */
+void ADC1_IRQHandler(void)
+{
+  /* USER CODE BEGIN ADC1_IRQn 0 */
+
+  /* USER CODE END ADC1_IRQn 0 */
+  HAL_ADC_IRQHandler(&hadc1);
+  /* USER CODE BEGIN ADC1_IRQn 1 */
+
+  /* USER CODE END ADC1_IRQn 1 */
+}
+
+/**
   * @brief This function handles TIM1 trigger, commutation and TIM17 interrupts.
   */
 void TIM1_TRG_COM_TIM17_IRQHandler(void)
@@ -171,6 +187,20 @@ void TIM1_TRG_COM_TIM17_IRQHandler(void)
   /* USER CODE BEGIN TIM1_TRG_COM_TIM17_IRQn 1 */
 
   /* USER CODE END TIM1_TRG_COM_TIM17_IRQn 1 */
+}
+
+/**
+  * @brief This function handles TIM2 global interrupt.
+  */
+void TIM2_IRQHandler(void)
+{
+  /* USER CODE BEGIN TIM2_IRQn 0 */
+
+  /* USER CODE END TIM2_IRQn 0 */
+  HAL_TIM_IRQHandler(&htim2);
+  /* USER CODE BEGIN TIM2_IRQn 1 */
+
+  /* USER CODE END TIM2_IRQn 1 */
 }
 
 /**
