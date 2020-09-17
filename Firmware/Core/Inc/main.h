@@ -61,6 +61,8 @@ void Error_Handler(void);
 /* USER CODE END EFP */
 
 /* Private defines -----------------------------------------------------------*/
+#define DEBUG_1_Pin GPIO_PIN_0
+#define DEBUG_1_GPIO_Port GPIOA
 #define I_Sense_Pin GPIO_PIN_1
 #define I_Sense_GPIO_Port GPIOA
 #define Direction_Pin GPIO_PIN_2
@@ -71,6 +73,14 @@ void Error_Handler(void);
 #define nSleep_GPIO_Port GPIOA
 #define nFault_Pin GPIO_PIN_5
 #define nFault_GPIO_Port GPIOA
+#define DEBUG_2_Pin GPIO_PIN_6
+#define DEBUG_2_GPIO_Port GPIOA
+#define DEBUG_3_Pin GPIO_PIN_7
+#define DEBUG_3_GPIO_Port GPIOA
+#define DEBUG_4_Pin GPIO_PIN_0
+#define DEBUG_4_GPIO_Port GPIOB
+#define DEBUG_5_Pin GPIO_PIN_8
+#define DEBUG_5_GPIO_Port GPIOA
 #define LED_B_Pin GPIO_PIN_9
 #define LED_B_GPIO_Port GPIOA
 #define PWM_IN_Pin GPIO_PIN_10

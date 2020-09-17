@@ -421,8 +421,19 @@ static void MX_GPIO_Init(void)
   __HAL_RCC_GPIOB_CLK_ENABLE();
 
   /*Configure GPIO pin Output Level */
-  HAL_GPIO_WritePin(GPIOA, Direction_Pin|nSleep_Pin|LED_B_Pin|LED_G_Pin
+  HAL_GPIO_WritePin(GPIOA, DEBUG_1_Pin|Direction_Pin|nSleep_Pin|DEBUG_2_Pin
+                          |DEBUG_3_Pin|DEBUG_5_Pin|LED_B_Pin|LED_G_Pin
                           |LED_R_Pin, GPIO_PIN_RESET);
+
+  /*Configure GPIO pin Output Level */
+  HAL_GPIO_WritePin(DEBUG_4_GPIO_Port, DEBUG_4_Pin, GPIO_PIN_RESET);
+
+  /*Configure GPIO pins : DEBUG_1_Pin DEBUG_2_Pin DEBUG_3_Pin DEBUG_5_Pin */
+  GPIO_InitStruct.Pin = DEBUG_1_Pin|DEBUG_2_Pin|DEBUG_3_Pin|DEBUG_5_Pin;
+  GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
+  GPIO_InitStruct.Pull = GPIO_PULLDOWN;
+  GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_HIGH;
+  HAL_GPIO_Init(GPIOA, &GPIO_InitStruct);
 
   /*Configure GPIO pins : Direction_Pin LED_B_Pin LED_G_Pin LED_R_Pin */
   GPIO_InitStruct.Pin = Direction_Pin|LED_B_Pin|LED_G_Pin|LED_R_Pin;
@@ -443,6 +454,13 @@ static void MX_GPIO_Init(void)
   GPIO_InitStruct.Mode = GPIO_MODE_INPUT;
   GPIO_InitStruct.Pull = GPIO_NOPULL;
   HAL_GPIO_Init(nFault_GPIO_Port, &GPIO_InitStruct);
+
+  /*Configure GPIO pin : DEBUG_4_Pin */
+  GPIO_InitStruct.Pin = DEBUG_4_Pin;
+  GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
+  GPIO_InitStruct.Pull = GPIO_PULLDOWN;
+  GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_HIGH;
+  HAL_GPIO_Init(DEBUG_4_GPIO_Port, &GPIO_InitStruct);
 
   /*Configure GPIO pin : AD0_Pin */
   GPIO_InitStruct.Pin = AD0_Pin;
