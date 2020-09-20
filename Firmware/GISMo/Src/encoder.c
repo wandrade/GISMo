@@ -12,6 +12,9 @@ void init_encoder(){
 // Define interupt function
 void TIM1_CC_IRQHandler(void)
 {
+#ifdef DEBUG_PIN
+	HAL_GPIO_WritePin(DEBUG_1_GPIO_Port, DEBUG_1_Pin, 1);
+#endif
 	// Check if it comes from channel3
 	if(__HAL_TIM_GET_IT_SOURCE(&htim1, TIM_IT_CC3) != RESET){
 		// Clear interrupt flag on channel 3
@@ -22,6 +25,9 @@ void TIM1_CC_IRQHandler(void)
 		__HAL_TIM_SET_COUNTER(&htim1, 65);
 		update_encoder(&htim1);
 	}
+#ifdef DEBUG_PIN
+	HAL_GPIO_WritePin(DEBUG_1_GPIO_Port, DEBUG_1_Pin, 0);
+#endif
 }
 
 void update_encoder(TIM_HandleTypeDef* htim){

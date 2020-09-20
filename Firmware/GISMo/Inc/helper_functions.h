@@ -8,6 +8,8 @@
 
 #define PI 3.14159265359
 
+#define DEBUG_PIN
+
 // T enable clock counting of CPU
 #define  ARM_CM_DEMCR      (*(uint32_t *)0xE000EDFC)
 #define  ARM_CM_DWT_CTRL   (*(uint32_t *)0xE0001000)

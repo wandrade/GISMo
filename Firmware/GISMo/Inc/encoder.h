@@ -8,16 +8,6 @@
 #define ENCODER_MAX_VALID_CLOCK_NUM	4111		// The last 8 clocks are always 0 if the sensor is connected and there is a magnet close to it
 #define ENCODER_MIN_VALID_CLOCK_NUM	16			// When there is no error, the sensor outputs 16 clocks high at the beggining (12 for init and 4 bit for error code)
 
-
-
-
-
-//
-//
-//#define ENCODER_REFRESH_RATE		1000		// in Hz
-//#define CLOCK_TICKS_PER_PWM_CYCLE 	4111
-//#define PWM_TO_RADIANS_SCALE		0.00153399	// Convert from 12bit raw to and angle in radians
-
 #include "stm32f3xx_hal.h"
 #include "helper_functions.h"
 #include <math.h>
@@ -39,6 +29,11 @@ ENCODER_STRUCT encoder;
 void init_encoder();
 void update_encoder(TIM_HandleTypeDef* htim);
 
+
+//#define ENCODER_REFRESH_RATE		1000		// in Hz
+//#define CLOCK_TICKS_PER_PWM_CYCLE 	4111
+//#define PWM_TO_RADIANS_SCALE		0.00153399	// Convert from 12bit raw to and angle in radians
+//
 //typedef struct {
 //	uint32_t raw;
 //	uint32_t raw_prev;
