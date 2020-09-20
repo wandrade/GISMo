@@ -25,9 +25,9 @@ void TIM1_CC_IRQHandler(void)
 		__HAL_TIM_SET_COUNTER(&htim1, 65);
 		update_encoder(&htim1);
 	}
-#ifdef DEBUG_PIN
+	#ifdef DEBUG_PIN
 	HAL_GPIO_WritePin(DEBUG_1_GPIO_Port, DEBUG_1_Pin, 0);
-#endif
+	#endif
 }
 
 void update_encoder(TIM_HandleTypeDef* htim){
