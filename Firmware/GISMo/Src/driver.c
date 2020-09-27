@@ -22,7 +22,10 @@ void init_driver(){
     flag = 0;
 
     // Set Analogue PWM trigger
-//    TIM2->CCR2 = 500; // Delay before reading current (in clock cycles of a 32MHZ clock)
+    HAL_ADC_Start_DMA(&hadc1, (uint32_t*)&current_adc_buffer, 5);
+    HAL_TIM_Base_Start_IT(&htim2);
+
+    //    TIM2->CCR2 = 500; // Delay before reading current (in clock cycles of a 32MHZ clock)
 //    HAL_ADC_Start_DMA(&hadc1, (uint32_t*)&current_adc_buffer, 1);
 //    HAL_ADC_Start(&hadc1);
 //    HAL_TIM_Base_Start_IT(&htim2);
@@ -52,6 +55,7 @@ void HAL_ADC_ConvCpltCallback(ADC_HandleTypeDef* hadc){
 	HAL_GPIO_TogglePin(DEBUG_3_GPIO_Port, DEBUG_3_Pin);
 #endif
 	flag++;
+	current = current_adc_buffer[0];
 //	if(flag == 0) flag = 1000;
 //	else flag = 0;
 
