@@ -8,20 +8,24 @@ extern TIM_HandleTypeDef htim2;
 extern ADC_HandleTypeDef hadc1;
 
 uint16_t current_adc_buffer[32] = {0};
+uint32_t flag, current;
 void init_driver(){
 	// Set configuration struct
     pwm_config.OCMode = TIM_OCMODE_PWM1; // 1 for side aligned 2 for middle aligned PWM
     pwm_config.OCPolarity = TIM_OCPOLARITY_HIGH;
     pwm_config.OCFastMode = TIM_OCFAST_DISABLE;
-    // Set duty cycle to 0
+    // Set duty cycle to 0 and start PWM output encoder
     pwm_config.Pulse = 0;
     HAL_TIM_PWM_ConfigChannel(&htim2, &pwm_config, TIM_CHANNEL_4);
     HAL_TIM_PWM_Start(&htim2, TIM_CHANNEL_4);
+    current = 0;
+    flag = 0;
 
     // Set Analogue PWM trigger
 //    TIM2->CCR2 = 500; // Delay before reading current (in clock cycles of a 32MHZ clock)
-    HAL_ADC_Start_DMA(&hadc1, (uint32_t*)&current_adc_buffer, 1);
-    HAL_TIM_Base_Start_IT(&htim2);
+//    HAL_ADC_Start_DMA(&hadc1, (uint32_t*)&current_adc_buffer, 1);
+//    HAL_ADC_Start(&hadc1);
+//    HAL_TIM_Base_Start_IT(&htim2);
 }
 
 void enable_driver(){
@@ -47,4 +51,8 @@ void HAL_ADC_ConvCpltCallback(ADC_HandleTypeDef* hadc){
 #ifdef DEBUG_PIN
 	HAL_GPIO_TogglePin(DEBUG_3_GPIO_Port, DEBUG_3_Pin);
 #endif
+	flag++;
+//	if(flag == 0) flag = 1000;
+//	else flag = 0;
+
 }
