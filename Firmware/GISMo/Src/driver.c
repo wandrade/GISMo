@@ -53,6 +53,7 @@ void HAL_ADC_ConvCpltCallback(ADC_HandleTypeDef* hadc){
 	// If buffer size is 2^n, then division can be done more efficiently with bit shift
 	// filter/2^n = filtre >> n
 		current.raw = filtre >> 3;
+		current.value = current.raw*CURRENT_SCALAR;
 	//	current.raw = filtre/CURRENT_BUFF_SIZE;
 #ifdef DEBUG_PIN
 	HAL_GPIO_WritePin(DEBUG_3_GPIO_Port, DEBUG_3_Pin,0);

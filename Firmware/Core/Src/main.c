@@ -514,12 +514,9 @@ void StartDefaultTask(void const * argument)
   /* Infinite loop */
 	turns = 0;
   enable_driver();
-  pwm_set_ouput(150, 0);
+  pwm_set_ouput(1000, 0);
   for(;;)
   {
-//	HAL_ADC_Start(&hadc1);
-//	HAL_ADC_PollForConversion(&hadc1, HAL_MAX_DELAY);
-//	current = HAL_ADC_GetValue(&hadc1);S
 //	  if(turns > 6){
 //		  disable_driver();
 //	  }
@@ -533,10 +530,7 @@ void StartDefaultTask(void const * argument)
 //	  if(pwm_value == 1000) step = -10;
 //	  pwm_value += step;
 //	  pwm_set_ouput(pwm_value, dir);
-//	  HAL_ADC_Start(&hadc1);
-//	  HAL_ADC_PollForConversion(&hadc1, HAL_MAX_DELAY);
-//	  current = HAL_ADC_GetValue(&hadc1);
-	  osDelay(200);
+	  osDelay(100);
 //    HAL_GPIO_TogglePin(LED_G_GPIO_Port, LED_G_Pin);
   }
   /* USER CODE END 5 */
