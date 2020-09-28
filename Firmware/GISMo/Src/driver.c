@@ -6,9 +6,8 @@
 extern TIM_OC_InitTypeDef pwm_config;
 extern TIM_HandleTypeDef htim2;
 extern ADC_HandleTypeDef hadc1;
+extern CURRENT_SENSING_STRUCT current;
 
-uint16_t current_adc_buffer[32] = {0};
-uint32_t flag, current;
 void init_driver(){
 	// Set configuration struct
     pwm_config.OCMode = TIM_OCMODE_PWM1; // 1 for side aligned 2 for middle aligned PWM
@@ -18,17 +17,10 @@ void init_driver(){
     pwm_config.Pulse = 0;
     HAL_TIM_PWM_ConfigChannel(&htim2, &pwm_config, TIM_CHANNEL_4);
     HAL_TIM_PWM_Start(&htim2, TIM_CHANNEL_4);
-    current = 0;
-    flag = 0;
 
-    // Set Analogue PWM trigger
-    HAL_ADC_Start_DMA(&hadc1, (uint32_t*)&current_adc_buffer, 5);
+    // Set Analogue PWM trigger and DMA
+    HAL_ADC_Start_DMA(&hadc1, (uint32_t*)&current.adc_buffer, CURRENT_BUFF_SIZE);
     HAL_TIM_Base_Start_IT(&htim2);
-
-    //    TIM2->CCR2 = 500; // Delay before reading current (in clock cycles of a 32MHZ clock)
-//    HAL_ADC_Start_DMA(&hadc1, (uint32_t*)&current_adc_buffer, 1);
-//    HAL_ADC_Start(&hadc1);
-//    HAL_TIM_Base_Start_IT(&htim2);
 }
 
 void enable_driver(){
@@ -52,11 +44,17 @@ void pwm_set_ouput(uint16_t dutyCycle, uint8_t direction){
 
 void HAL_ADC_ConvCpltCallback(ADC_HandleTypeDef* hadc){
 #ifdef DEBUG_PIN
-	HAL_GPIO_TogglePin(DEBUG_3_GPIO_Port, DEBUG_3_Pin);
+	HAL_GPIO_WritePin(DEBUG_3_GPIO_Port, DEBUG_3_Pin,0);
 #endif
-	flag++;
-	current = current_adc_buffer[0];
-//	if(flag == 0) flag = 1000;
-//	else flag = 0;
-
+	uint32_t filtre = 0;
+	for(uint8_t i = 0; i < CURRENT_BUFF_SIZE; i++){
+		filtre += current.adc_buffer[i];
+	}
+	// If buffer size is 2^n, then division can be done more efficiently with bit shift
+	// filter/2^n = filtre >> n
+		current.raw = filtre >> 3;
+	//	current.raw = filtre/CURRENT_BUFF_SIZE;
+#ifdef DEBUG_PIN
+	HAL_GPIO_WritePin(DEBUG_3_GPIO_Port, DEBUG_3_Pin,0);
+#endif
 }
