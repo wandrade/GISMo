@@ -8,25 +8,20 @@
 
 #define PI 3.14159265359
 
-#define DEBUG_PIN
+#define DEBUG_PIN // comment out to disable output debug pin
 
-// T enable clock counting of CPU
+//######################################################## Clock counter ########################################################//
+
 #define  ARM_CM_DEMCR      (*(uint32_t *)0xE000EDFC)
 #define  ARM_CM_DWT_CTRL   (*(uint32_t *)0xE0001000)
 #define  ARM_CM_DWT_CYCCNT (*(uint32_t *)0xE0001004)
 
+uint32_t clock_counter_start_time;
+
 void enable_CPU_count();
-
-
-// How to measure CPU clock
-//uint32_t  start;
-//uint32_t  stop;
-//uint32_t  delta;
-//
-//start = ARM_CM_DWT_CYCCNT;
-//// Code to measure
-//stop  = ARM_CM_DWT_CYCCNT;
-//delta = stop – start;
+void start_cpu_count();
+uint32_t stop_cpu_count();
 
 
 #endif
+//###############################################################################################################################//
