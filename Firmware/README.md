@@ -15,6 +15,9 @@ CubeMX
 CubeMonitor
 CubeIDE
 
+## I²C interface
+To learn more about it and how to implemente it go to [this article](https://deepbluembedded.com/stm32-i2c-tutorial-hal-examples-slave-dma/) and have a look. It is very easy and well explained, starting from the theory then jumpping into the implementation used by STM32 MCUs
+
 ## PWM Encoder
 ### Choosing an encoder
 This projects aims to use either the magnetic encoder [AS5600](https://www.mouser.co.uk/datasheet/2/588/AS5600_DS000365_5-00-1877365.pdf) or [AS5048x](https://ams.com/documents/20143/36005/AS5048_DS000298_4-00.pdf/910aef1f-6cd3-cbda-9d09-41f152104832). They both have the same PWM interface so it should be just a matter of choosing your preference and it will work.
