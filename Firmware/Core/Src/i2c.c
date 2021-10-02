@@ -32,14 +32,14 @@ void MX_I2C1_Init(void)
 
   /* USER CODE BEGIN I2C1_Init 0 */
   // Get I2C address code from hardware jumpers
+  // Address starts at I2C_ADDRESS_BASE and is offset by value read on jumpers array
   uint8_t I2C_Address = 0x0;
-  I2C_Address = I2C_ADDRESS_BASE + (
+  I2C_Address = (I2C_ADDRESS_BASE + (
 		  (HAL_GPIO_ReadPin(AD0_GPIO_Port, AD0_Pin) << 0)|
 		  (HAL_GPIO_ReadPin(AD1_GPIO_Port, AD1_Pin) << 1)|
 		  (HAL_GPIO_ReadPin(AD2_GPIO_Port, AD2_Pin) << 2)|
 		  (HAL_GPIO_ReadPin(AD3_GPIO_Port, AD3_Pin) << 3)
-  );
-  hi2c1.Init.OwnAddress1 = I2C_Address << 1;
+  )) << 1;
   /* USER CODE END I2C1_Init 0 */
 
   /* USER CODE BEGIN I2C1_Init 1 */
@@ -47,9 +47,10 @@ void MX_I2C1_Init(void)
   /* USER CODE END I2C1_Init 1 */
   hi2c1.Instance = I2C1;
   hi2c1.Init.Timing = 0x2000090E;
+  hi2c1.Init.OwnAddress1 = I2C_Address;
   hi2c1.Init.AddressingMode = I2C_ADDRESSINGMODE_7BIT;
-  hi2c1.Init.DualAddressMode = I2C_DUALADDRESS_DISABLE;
-  hi2c1.Init.OwnAddress2 = 0;
+  hi2c1.Init.DualAddressMode = I2C_DUALADDRESS_ENABLE;
+  hi2c1.Init.OwnAddress2 = (I2C_ADDRESS_BASE + 16) << 1;
   hi2c1.Init.OwnAddress2Masks = I2C_OA2_NOMASK;
   hi2c1.Init.GeneralCallMode = I2C_GENERALCALL_DISABLE;
   hi2c1.Init.NoStretchMode = I2C_NOSTRETCH_DISABLE;
