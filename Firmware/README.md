@@ -16,7 +16,11 @@ CubeMonitor
 CubeIDE
 
 ## I²C interface
-To learn more about it and how to implemente it go to [this article](https://deepbluembedded.com/stm32-i2c-tutorial-hal-examples-slave-dma/) and have a look. It is very easy and well explained, starting from the theory then jumpping into the implementation used by STM32 MCUs
+To learn more about it and how to implemente it go to these articles:
+* https://deepbluembedded.com/stm32-i2c-tutorial-hal-examples-slave-dma/
+* https://visualgdb.com/tutorials/arm/stm32/i2c/
+
+and have a look. It is very easy and well explained, starting from the theory then jumpping into the implementation used by STM32 MCUs
 
 ## PWM Encoder
 ### Choosing an encoder
