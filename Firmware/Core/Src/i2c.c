@@ -1,3 +1,4 @@
+/* USER CODE BEGIN Header */
 /**
   ******************************************************************************
   * @file    i2c.c
@@ -6,17 +7,16 @@
   ******************************************************************************
   * @attention
   *
-  * <h2><center>&copy; Copyright (c) 2021 STMicroelectronics.
-  * All rights reserved.</center></h2>
+  * Copyright (c) 2022 STMicroelectronics.
+  * All rights reserved.
   *
-  * This software component is licensed by ST under Ultimate Liberty license
-  * SLA0044, the "License"; You may not use this file except in compliance with
-  * the License. You may obtain a copy of the License at:
-  *                             www.st.com/SLA0044
+  * This software is licensed under terms that can be found in the LICENSE file
+  * in the root directory of this software component.
+  * If no LICENSE file comes with this software, it is provided AS-IS.
   *
   ******************************************************************************
   */
-
+/* USER CODE END Header */
 /* Includes ------------------------------------------------------------------*/
 #include "i2c.h"
 
@@ -58,12 +58,14 @@ void MX_I2C1_Init(void)
   {
     Error_Handler();
   }
+
   /** Configure Analogue filter
   */
   if (HAL_I2CEx_ConfigAnalogFilter(&hi2c1, I2C_ANALOGFILTER_ENABLE) != HAL_OK)
   {
     Error_Handler();
   }
+
   /** Configure Digital filter
   */
   if (HAL_I2CEx_ConfigDigitalFilter(&hi2c1, 0) != HAL_OK)
@@ -142,6 +144,64 @@ void HAL_I2C_MspDeInit(I2C_HandleTypeDef* i2cHandle)
 
 /* USER CODE BEGIN 1 */
 
-/* USER CODE END 1 */
+#define I2C_BUFFER_SIZE 8
+uint8_t i2c_buffer[I2C_BUFFER_SIZE];
 
-/************************ (C) COPYRIGHT STMicroelectronics *****END OF FILE****/
+#define I2C_ADD_SIZE 		1
+static uint8_t data_size;
+
+uint8_t MEMORY[7];
+
+
+
+extern void HAL_I2C_AddrCallback(I2C_HandleTypeDef *hi2c, uint8_t TransferDirection, uint16_t AddrMatchCode){
+	UNUSED(AddrMatchCode);
+	MEMORY[0] = 0x10;
+	MEMORY[1] = 0x11;
+	MEMORY[2] = 0x12;
+	MEMORY[3] = 0x13;
+	MEMORY[4] = 0x14;
+	MEMORY[5] = 0x15;
+	MEMORY[6] = 0x16;
+	i2c_buffer[1] = 0x41;
+	i2c_buffer[2] = 0x55;
+	// If is master write, listen to necessary amount of bytes
+	if(TransferDirection == I2C_DIRECTION_TRANSMIT){
+		// Saves last command at the end of buffer
+		i2c_buffer[I2C_BUFFER_SIZE-1] = i2c_buffer[0];
+		HAL_I2C_Slave_Sequential_Receive_IT(hi2c, (void*)i2c_buffer, I2C_ADD_SIZE + data_size, I2C_FIRST_FRAME);
+	}
+	else {
+			HAL_I2C_Slave_Sequential_Transmit_IT(hi2c, (void*)&MEMORY[i2c_buffer[0]], 2, I2C_LAST_FRAME);
+	}
+	// Read address + data size. If it is a read command, data size will be zero
+}
+
+
+extern void HAL_I2C_SlaveRxCpltCallback(I2C_HandleTypeDef *hi2c){
+	HAL_I2C_EnableListen_IT(hi2c);
+}
+
+extern void HAL_I2C_ListenCpltCallback (I2C_HandleTypeDef *hi2c){
+	HAL_I2C_EnableListen_IT(hi2c);
+}
+
+extern void HAL_I2C_SlaveTxCpltCallback(I2C_HandleTypeDef *hi2c){
+	HAL_I2C_EnableListen_IT(hi2c);
+}
+
+
+extern void HAL_I2C_ErrorCallback(I2C_HandleTypeDef *hi2c)
+{
+	//HAL_I2C_ERROR_NONE       0x00000000U    /*!< No error           */
+	//HAL_I2C_ERROR_BERR       0x00000001U    /*!< BERR error         */
+	//HAL_I2C_ERROR_ARLO       0x00000002U    /*!< ARLO error         */
+	//HAL_I2C_ERROR_AF         0x00000004U    /*!< Ack Failure error  */
+	//HAL_I2C_ERROR_OVR        0x00000008U    /*!< OVR error          */
+	//HAL_I2C_ERROR_DMA        0x00000010U    /*!< DMA transfer error */
+	//HAL_I2C_ERROR_TIMEOUT    0x00000020U    /*!< Timeout Error      */
+	uint32_t error_code = HAL_I2C_GetError(hi2c);
+	if (error_code != HAL_I2C_ERROR_AF){}
+	HAL_I2C_EnableListen_IT(hi2c);
+}
+/* USER CODE END 1 */

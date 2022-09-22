@@ -1,3 +1,8 @@
+
+// helper_functions.h
+#ifndef HELPER_FUNCTIONS_C
+#define HELPER_FUNCTIONS_C
+
 #include "helper_functions.h"
 
 
@@ -23,3 +28,5 @@ uint32_t stop_cpu_count(){
 	return ARM_CM_DWT_CYCCNT - clock_counter_start_time - 34;
 }
 //###############################################################################################################################//
+
+#endif

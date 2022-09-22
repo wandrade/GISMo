@@ -3,10 +3,11 @@
 #include "driver.h"
 #include "main.h"
 
-extern TIM_OC_InitTypeDef pwm_config;
 extern TIM_HandleTypeDef htim2;
 extern ADC_HandleTypeDef hadc1;
-extern CURRENT_SENSING_STRUCT current;
+
+CURRENT_SENSING_STRUCT current;
+TIM_OC_InitTypeDef pwm_config;
 
 void init_driver(){
 	// Set configuration struct

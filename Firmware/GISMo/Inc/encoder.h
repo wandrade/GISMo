@@ -22,7 +22,7 @@ typedef struct {
 	int32_t raw;
 
 } ENCODER_STRUCT;
-ENCODER_STRUCT encoder;
+extern ENCODER_STRUCT encoder;
 
 
 

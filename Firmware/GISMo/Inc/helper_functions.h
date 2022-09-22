@@ -16,11 +16,11 @@
 #define  ARM_CM_DWT_CTRL   (*(uint32_t *)0xE0001000)
 #define  ARM_CM_DWT_CYCCNT (*(uint32_t *)0xE0001004)
 
-uint32_t clock_counter_start_time;
+extern uint32_t clock_counter_start_time;
 
 void enable_CPU_count();
 void start_cpu_count();
-uint32_t stop_cpu_count();
+extern uint32_t stop_cpu_count();
 
 
 #endif

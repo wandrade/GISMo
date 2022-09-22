@@ -40,8 +40,8 @@ typedef struct {
 } CURRENT_SENSING_STRUCT;
 
 
-CURRENT_SENSING_STRUCT current;
-TIM_OC_InitTypeDef pwm_config;
+extern CURRENT_SENSING_STRUCT current;
+extern TIM_OC_InitTypeDef pwm_config;
 
 void init_driver();
 void enable_driver();

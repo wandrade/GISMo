@@ -1,6 +1,6 @@
 #include "encoder.h"
 
-extern ENCODER_STRUCT encoder;
+ENCODER_STRUCT encoder;
 extern TIM_HandleTypeDef htim1;
 
 
