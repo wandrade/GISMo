@@ -172,7 +172,9 @@ extern void HAL_I2C_AddrCallback(I2C_HandleTypeDef *hi2c, uint8_t TransferDirect
 		HAL_I2C_Slave_Sequential_Receive_IT(hi2c, (void*)i2c_buffer, I2C_ADD_SIZE + data_size, I2C_FIRST_FRAME);
 	}
 	else {
-			HAL_I2C_Slave_Sequential_Transmit_IT(hi2c, (void*)&MEMORY[i2c_buffer[0]], 2, I2C_LAST_FRAME);
+		// Return value of requested register
+		if(data_register[i2c_buffer[0]].mem_addr)
+			HAL_I2C_Slave_Sequential_Transmit_IT(hi2c, data_register[i2c_buffer[0]].mem_addr, data_register[i2c_buffer[0]].len, I2C_LAST_FRAME);
 	}
 	// Read address + data size. If it is a read command, data size will be zero
 }
