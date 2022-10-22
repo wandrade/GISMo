@@ -34,6 +34,7 @@ extern "C" {
 /* USER CODE BEGIN Includes */
 #include <encoder.h>
 #include <driver.h>
+#include <led.h>
 /* USER CODE END Includes */
 
 /* Exported types ------------------------------------------------------------*/

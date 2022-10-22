@@ -6,32 +6,26 @@ extern TIM_HandleTypeDef htim1;
 
 void init_encoder(){
 	  HAL_TIM_IC_Start_IT(&htim1, TIM_CHANNEL_3); // Rising edge
-	  HAL_TIM_IC_Start(&htim1, TIM_CHANNEL_4); // Falling Edge - Initialize interrupt capture but no callback function (We only need the CCR4 value)
+	  HAL_TIM_IC_Start(&htim1, TIM_CHANNEL_4); // Falling Edge - Initialise interrupt capture but no callback function (We only need the CCR4 value)
 }
 
-// Define interupt function
+// Define interrupt function
 void TIM1_CC_IRQHandler(void)
 {
-#ifdef DEBUG_PIN
-	HAL_GPIO_WritePin(DEBUG_1_GPIO_Port, DEBUG_1_Pin, 1);
-#endif
 	// Check if it comes from channel3
 	if(__HAL_TIM_GET_IT_SOURCE(&htim1, TIM_IT_CC3) != RESET){
 		// Clear interrupt flag on channel 3
 		__HAL_TIM_CLEAR_IT(&htim1, TIM_IT_CC3);
-		// Set counter to 48 which is how long it takes for this function to zero (to its like setting it to zero as soon as the PWM sensor rising edge is detected) with a bit of tweaking
+		// Set counter to 65 which is how long it takes for this function to zero (to its like setting it to zero as soon as the PWM sensor rising edge is detected) with a bit of tweaking
 		// until i got some known values (e.g. 12 when no magnet is close to the encoder)
 		// This value was obtained experimentally by measuring the number of CPU clocks it took to run all these functions (https://www.embedded-computing.com/articles/measuring-code-execution-time-on-arm-cortex-m-mcus)
 		__HAL_TIM_SET_COUNTER(&htim1, 65);
 		update_encoder(&htim1);
 	}
-	#ifdef DEBUG_PIN
-	HAL_GPIO_WritePin(DEBUG_1_GPIO_Port, DEBUG_1_Pin, 0);
-	#endif
 }
 
 void update_encoder(TIM_HandleTypeDef* htim){
-	// Reset timer ASAP so we can consider 0 as the beggining of the period,
+	// Reset timer ASAP so we can consider 0 as the start of the period,
 	// falling edge time as the end of duty cycle and rising time (from next cycle) as the total period time
 	encoder.t_rising_edge = htim->Instance->CCR3;
 	encoder.t_falling_edge = htim->Instance->CCR4;

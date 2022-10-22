@@ -99,7 +99,6 @@ int main(void)
   /* USER CODE BEGIN 2 */
   init_driver();
   init_encoder();
-//  initialize_encoder();
 //  enable_CPU_count();
   /* USER CODE END 2 */
 

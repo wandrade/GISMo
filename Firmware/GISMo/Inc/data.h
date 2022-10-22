@@ -6,7 +6,8 @@
 #include "driver.h"
 #include "encoder.h"
 
-#define DATA_REGISTER_SIZE 255
+
+#define DATA_REGISTER_SIZE 256
 
 typedef struct{
 	void *mem_addr;
