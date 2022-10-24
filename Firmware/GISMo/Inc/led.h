@@ -8,9 +8,9 @@
 #include "cmsis_os.h"
 
 #define LED_UPDATE_PERIOD_MS 1
-#define LED_PWM_RESOLUTION 0x0F
+#define LED_PWM_RESOLUTION 0xF
 
-extern uint32_t led_pwm;
+extern uint16_t led_pwm;
 
 void StartLedUpdateTask(void const * argument);
 

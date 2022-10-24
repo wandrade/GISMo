@@ -16,5 +16,5 @@ void init_data(){
 	ADD_TO_REGISTER(encoder.single, uint16_t)
 	ADD_TO_REGISTER(encoder.multiturn_counter, int32_t)
 	ADD_TO_REGISTER(encoder.error, uint32_t)
-	ADD_TO_REGISTER(led_pwm, uint32_t)
+	ADD_TO_REGISTER(led_pwm, uint16_t)
 }

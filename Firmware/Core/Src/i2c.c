@@ -46,7 +46,7 @@ void MX_I2C1_Init(void)
 
   /* USER CODE END I2C1_Init 1 */
   hi2c1.Instance = I2C1;
-  hi2c1.Init.Timing = 0x2000090E;
+  hi2c1.Init.Timing = 0x0000020B;
   hi2c1.Init.OwnAddress1 = I2C_Address;
   hi2c1.Init.AddressingMode = I2C_ADDRESSINGMODE_7BIT;
   hi2c1.Init.DualAddressMode = I2C_DUALADDRESS_ENABLE;
@@ -95,7 +95,7 @@ void HAL_I2C_MspInit(I2C_HandleTypeDef* i2cHandle)
     */
     GPIO_InitStruct.Pin = GPIO_PIN_6|GPIO_PIN_7;
     GPIO_InitStruct.Mode = GPIO_MODE_AF_OD;
-    GPIO_InitStruct.Pull = GPIO_PULLUP;
+    GPIO_InitStruct.Pull = GPIO_NOPULL;
     GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_HIGH;
     GPIO_InitStruct.Alternate = GPIO_AF4_I2C1;
     HAL_GPIO_Init(GPIOB, &GPIO_InitStruct);
@@ -146,41 +146,38 @@ void HAL_I2C_MspDeInit(I2C_HandleTypeDef* i2cHandle)
 
 #define I2C_BUFFER_SIZE 8
 uint8_t i2c_buffer[I2C_BUFFER_SIZE];
-
-#define I2C_ADD_SIZE 		1
-static uint8_t data_size;
-
-uint8_t MEMORY[7];
-
-
+uint8_t reg_addr_rcvd = 0;
+#define I2C_REG_ADD_SIZE 		1
+#define I2C_PAYLOAD_SIZE		4
 
 extern void HAL_I2C_AddrCallback(I2C_HandleTypeDef *hi2c, uint8_t TransferDirection, uint16_t AddrMatchCode){
 	UNUSED(AddrMatchCode);
-	MEMORY[0] = 0x10;
-	MEMORY[1] = 0x11;
-	MEMORY[2] = 0x12;
-	MEMORY[3] = 0x13;
-	MEMORY[4] = 0x14;
-	MEMORY[5] = 0x15;
-	MEMORY[6] = 0x16;
-	i2c_buffer[1] = 0x41;
-	i2c_buffer[2] = 0x55;
 	// If is master write, listen to necessary amount of bytes
 	if(TransferDirection == I2C_DIRECTION_TRANSMIT){
-		// Saves last command at the end of buffer
-		i2c_buffer[I2C_BUFFER_SIZE-1] = i2c_buffer[0];
-		HAL_I2C_Slave_Sequential_Receive_IT(hi2c, (void*)i2c_buffer, I2C_ADD_SIZE + data_size, I2C_FIRST_FRAME);
+		// First write request is always 1 byte of the requested reg address
+		// Will saved it on the first position of I2C_buffer
+		if(!reg_addr_rcvd)
+			HAL_I2C_Slave_Sequential_Receive_IT(hi2c, (void*)i2c_buffer, I2C_REG_ADD_SIZE, I2C_FIRST_FRAME);
 	}
 	else {
-		// Return value of requested register
-		if(data_register[i2c_buffer[0]].mem_addr)
-			HAL_I2C_Slave_Sequential_Transmit_IT(hi2c, data_register[i2c_buffer[0]].mem_addr, data_register[i2c_buffer[0]].len, I2C_LAST_FRAME);
+		// If a read request is sent by the master, return the value of the data in the requested register that was saved on 1st
+		// position of the I2C buffer
+		HAL_I2C_Slave_Sequential_Transmit_IT(hi2c, data_register[i2c_buffer[0]].mem_addr, data_register[i2c_buffer[0]].len, I2C_LAST_FRAME);
 	}
-	// Read address + data size. If it is a read command, data size will be zero
 }
 
 
 extern void HAL_I2C_SlaveRxCpltCallback(I2C_HandleTypeDef *hi2c){
+	// This is called after a master 'write' request. first time around it will be a register.
+	// Second time if its a write to register request, it will be a payload
+	if(!reg_addr_rcvd){
+		// If reg_addr_rcvd is false, means that it received a register
+		reg_addr_rcvd = 1;
+		HAL_I2C_Slave_Sequential_Receive_IT(hi2c, data_register[i2c_buffer[0]].mem_addr, data_register[i2c_buffer[0]].len, I2C_NEXT_FRAME);
+	} else {
+		// If reg_addr_rcvd is set, means that this callback was returned after the payload data has been received
+		reg_addr_rcvd = 0;
+	}
 	HAL_I2C_EnableListen_IT(hi2c);
 }
 
@@ -189,6 +186,7 @@ extern void HAL_I2C_ListenCpltCallback (I2C_HandleTypeDef *hi2c){
 }
 
 extern void HAL_I2C_SlaveTxCpltCallback(I2C_HandleTypeDef *hi2c){
+	reg_addr_rcvd = 0;
 	HAL_I2C_EnableListen_IT(hi2c);
 }
 
