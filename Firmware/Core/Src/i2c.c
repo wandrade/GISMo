@@ -46,7 +46,7 @@ void MX_I2C1_Init(void)
 
   /* USER CODE END I2C1_Init 1 */
   hi2c1.Instance = I2C1;
-  hi2c1.Init.Timing = 0x0000020B;
+  hi2c1.Init.Timing = 0x00000001;
   hi2c1.Init.OwnAddress1 = I2C_Address;
   hi2c1.Init.AddressingMode = I2C_ADDRESSINGMODE_7BIT;
   hi2c1.Init.DualAddressMode = I2C_DUALADDRESS_ENABLE;
@@ -72,6 +72,10 @@ void MX_I2C1_Init(void)
   {
     Error_Handler();
   }
+
+  /** I2C Fast mode Plus enable
+  */
+  __HAL_SYSCFG_FASTMODEPLUS_ENABLE(I2C_FASTMODEPLUS_I2C1);
   /* USER CODE BEGIN I2C1_Init 2 */
 
   /* USER CODE END I2C1_Init 2 */
@@ -143,12 +147,13 @@ void HAL_I2C_MspDeInit(I2C_HandleTypeDef* i2cHandle)
 }
 
 /* USER CODE BEGIN 1 */
+#define I2C_REG_ADD_SIZE 1
+uint8_t reg_add[I2C_REG_ADD_SIZE];
 
-#define I2C_BUFFER_SIZE 8
-uint8_t i2c_buffer[I2C_BUFFER_SIZE];
-uint8_t reg_addr_rcvd = 0;
-#define I2C_REG_ADD_SIZE 		1
-#define I2C_PAYLOAD_SIZE		4
+#define BUFFER_SIZE 5
+uint8_t buffer[BUFFER_SIZE] = {1,2,3,4,5};
+uint8_t tx_index = 0;
+uint8_t rx_index = 0;
 
 extern void HAL_I2C_AddrCallback(I2C_HandleTypeDef *hi2c, uint8_t TransferDirection, uint16_t AddrMatchCode){
 	UNUSED(AddrMatchCode);
@@ -156,40 +161,34 @@ extern void HAL_I2C_AddrCallback(I2C_HandleTypeDef *hi2c, uint8_t TransferDirect
 	if(TransferDirection == I2C_DIRECTION_TRANSMIT){
 		// First write request is always 1 byte of the requested reg address
 		// Will saved it on the first position of I2C_buffer
-		if(!reg_addr_rcvd)
-			HAL_I2C_Slave_Sequential_Receive_IT(hi2c, (void*)i2c_buffer, I2C_REG_ADD_SIZE, I2C_FIRST_FRAME);
+		rx_index = 0;
+		HAL_I2C_Slave_Sequential_Receive_IT(hi2c, (void*)reg_add, I2C_REG_ADD_SIZE, I2C_FIRST_FRAME);
 	}
 	else {
 		// If a read request is sent by the master, return the value of the data in the requested register that was saved on 1st
 		// position of the I2C buffer
-		HAL_I2C_Slave_Sequential_Transmit_IT(hi2c, data_register[i2c_buffer[0]].mem_addr, data_register[i2c_buffer[0]].len, I2C_LAST_FRAME);
+		HAL_I2C_Slave_Sequential_Transmit_IT(hi2c, buffer + reg_add[0], 1, I2C_FIRST_FRAME);
 	}
 }
 
+extern void HAL_I2C_SlaveTxCpltCallback(I2C_HandleTypeDef *hi2c) {
+    // Transmit complete callback
+	tx_index++;
+	if (tx_index >= BUFFER_SIZE) tx_index = 0; // Wrap-around
+	HAL_I2C_Slave_Sequential_Transmit_IT(hi2c, buffer + tx_index + reg_add[0], 1, I2C_FIRST_AND_NEXT_FRAME);
+}
 
 extern void HAL_I2C_SlaveRxCpltCallback(I2C_HandleTypeDef *hi2c){
 	// This is called after a master 'write' request. first time around it will be a register.
-	// Second time if its a write to register request, it will be a payload
-	if(!reg_addr_rcvd){
-		// If reg_addr_rcvd is false, means that it received a register
-		reg_addr_rcvd = 1;
-		HAL_I2C_Slave_Sequential_Receive_IT(hi2c, data_register[i2c_buffer[0]].mem_addr, data_register[i2c_buffer[0]].len, I2C_NEXT_FRAME);
-	} else {
-		// If reg_addr_rcvd is set, means that this callback was returned after the payload data has been received
-		reg_addr_rcvd = 0;
-	}
-	HAL_I2C_EnableListen_IT(hi2c);
+	HAL_I2C_Slave_Sequential_Receive_IT(hi2c, buffer + rx_index + reg_add[0], 1, I2C_FIRST_AND_NEXT_FRAME);
+	rx_index++;
 }
 
 extern void HAL_I2C_ListenCpltCallback (I2C_HandleTypeDef *hi2c){
-	HAL_I2C_EnableListen_IT(hi2c);
-}
-
-extern void HAL_I2C_SlaveTxCpltCallback(I2C_HandleTypeDef *hi2c){
 	reg_addr_rcvd = 0;
+	tx_index = 0;
 	HAL_I2C_EnableListen_IT(hi2c);
 }
-
 
 extern void HAL_I2C_ErrorCallback(I2C_HandleTypeDef *hi2c)
 {
