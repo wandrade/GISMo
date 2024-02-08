@@ -6,12 +6,9 @@
 #include "task.h"
 #include "main.h"
 #include "cmsis_os.h"
+#include "data.h"
 
-#define LED_UPDATE_PERIOD_MS 1
-#define LED_PWM_RESOLUTION 0xF
-
-extern uint16_t led_pwm;
-
-void StartLedUpdateTask(void const * argument);
-
+void init_led();
+void ledPWMTask(void *);
+void ledManagerTask(void*);
 #endif

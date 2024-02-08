@@ -48,7 +48,6 @@
 
 /* USER CODE END Variables */
 osThreadId defaultTaskHandle;
-osThreadId ledUpdateTaskHandle;
 
 /* Private function prototypes -----------------------------------------------*/
 /* USER CODE BEGIN FunctionPrototypes */
@@ -56,7 +55,6 @@ osThreadId ledUpdateTaskHandle;
 /* USER CODE END FunctionPrototypes */
 
 void StartDefaultTask(void const * argument);
-extern void StartLedUpdateTask(void const * argument);
 
 void MX_FREERTOS_Init(void); /* (MISRA C 2004 rule 8.1) */
 
@@ -106,10 +104,6 @@ void MX_FREERTOS_Init(void) {
   /* definition and creation of defaultTask */
   osThreadDef(defaultTask, StartDefaultTask, osPriorityNormal, 0, 64);
   defaultTaskHandle = osThreadCreate(osThread(defaultTask), NULL);
-
-  /* definition and creation of ledUpdateTask */
-  osThreadDef(ledUpdateTask, StartLedUpdateTask, osPriorityIdle, 0, 64);
-  ledUpdateTaskHandle = osThreadCreate(osThread(ledUpdateTask), NULL);
 
   /* USER CODE BEGIN RTOS_THREADS */
   /* add threads, ... */

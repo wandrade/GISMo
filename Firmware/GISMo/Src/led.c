@@ -1,40 +1,82 @@
 //led.c
 #include "led.h"
 
-uint16_t led_pwm = 0x0000;
+#define MGR_UPDATE_PERIOD_MS 100
+#define LED_UPDATE_PERIOD_MS 1
+#define LED_PWM_RESOLUTION 0xF
 
-void StartLedUpdateTask(void const * argument){
-	// Initialise the xLastWakeTime variable with the current time.
-	TickType_t xLastWakeTime = xTaskGetTickCount();
-	uint8_t i;
+extern data_register_t data_register;
 
-	for( ;; )
-	{
-		// Perform action here.
-		for (i = 0; i < LED_PWM_RESOLUTION; i++){
-			// Wait for the next cycle.
-			vTaskDelayUntil(&xLastWakeTime, LED_UPDATE_PERIOD_MS);
-			// Blue LED
-			if (i >= (led_pwm & 0x000F)){
-				HAL_GPIO_WritePin(LED_B_GPIO_Port, LED_B_Pin, 0);
-			}
-			else {
-				HAL_GPIO_WritePin(LED_B_GPIO_Port, LED_B_Pin, 1);
-			}
-			// Green LED
-			if (i >= (led_pwm & 0x00F0) >> 2){
-				HAL_GPIO_WritePin(LED_G_GPIO_Port, LED_G_Pin, 0);
-			}
-			else {
-				HAL_GPIO_WritePin(LED_G_GPIO_Port, LED_G_Pin, 1);
-			}
-			// Red LED
-			if (i >= (led_pwm & 0x0F00) >> 4){
-				HAL_GPIO_WritePin(LED_R_GPIO_Port, LED_R_Pin, 0);
-			}
-			else {
-				HAL_GPIO_WritePin(LED_R_GPIO_Port, LED_R_Pin, 1);
-			}
-		}
+uint8_t led_mode;
+uint8_t led_dutycycle_r; // RGB pwm's from 0 to LED_PWM_RESOLUTION
+uint8_t led_dutycycle_g; // RGB pwm's from 0 to LED_PWM_RESOLUTION
+uint8_t led_dutycycle_b; // RGB pwm's from 0 to LED_PWM_RESOLUTION
+uint8_t periodCounter;
+
+void init_led(){
+    TaskHandle_t taskHandle = NULL;
+    xTaskCreate(ledPWMTask, 	"ledPWMTask", 	  24, NULL, tskIDLE_PRIORITY, &taskHandle);
+    xTaskCreate(ledManagerTask, "ledManagerTask", 64, NULL, tskIDLE_PRIORITY, &taskHandle);
+}
+
+int8_t led_dir = 0;
+static uint8_t heartbeat(uint8_t current_dc){
+	if(current_dc == LED_PWM_RESOLUTION){
+		led_dir = -1;
 	}
+	else if(current_dc == 0){
+		led_dir = 1;
+	}
+	return (current_dc += led_dir);
+}
+
+void ledManagerTask(void* pvParameters){
+    while(1){
+        // Update LED duty cycle every LED_UPDATE_PERIOD_MS
+        vTaskDelay(pdMS_TO_TICKS(MGR_UPDATE_PERIOD_MS));
+        led_mode = data_register.s.led_mode;
+
+        switch(led_mode){
+        case 0:
+			led_dutycycle_r = 0;
+			led_dutycycle_g = 0;
+			led_dutycycle_b = 0;
+            break;
+        case 1:
+			led_dutycycle_r = 0;
+			led_dutycycle_g = heartbeat(led_dutycycle_g);
+			led_dutycycle_b = 0;
+            break;
+        default:
+			led_dutycycle_r = 1;
+			led_dutycycle_g = 1;
+			led_dutycycle_b = 1;
+        };
+    }
+}
+
+void ledPWMTask(void *pvParameters){
+    while(1){
+        // Update LED duty cycle every LED_UPDATE_PERIOD_MS
+        vTaskDelay(pdMS_TO_TICKS(LED_UPDATE_PERIOD_MS));
+        // Increment period counter and reset if it reaches LED_PWM_RESOLUTION
+        periodCounter = (periodCounter + 1) % LED_PWM_RESOLUTION;
+
+        // Determine LED state based on duty cycle and period counter
+        if (periodCounter < led_dutycycle_r) {
+            HAL_GPIO_WritePin(LED_R_GPIO_Port, LED_R_Pin, GPIO_PIN_SET);
+        } else {
+            HAL_GPIO_WritePin(LED_R_GPIO_Port, LED_R_Pin, GPIO_PIN_RESET);
+        }
+        if (periodCounter < led_dutycycle_g) {
+            HAL_GPIO_WritePin(LED_G_GPIO_Port, LED_G_Pin, GPIO_PIN_SET);
+        } else {
+            HAL_GPIO_WritePin(LED_G_GPIO_Port, LED_G_Pin, GPIO_PIN_RESET);
+        }
+        if (periodCounter < led_dutycycle_b) {
+            HAL_GPIO_WritePin(LED_B_GPIO_Port, LED_B_Pin, GPIO_PIN_SET);
+        } else {
+            HAL_GPIO_WritePin(LED_B_GPIO_Port, LED_B_Pin, GPIO_PIN_RESET);
+        }
+    }
 }

@@ -7,11 +7,13 @@
 
 #define DATA_REGISTER_SIZE 256
 
-typedef struct __attribute__((__packed__)){
-	int8_t cmd;							// RW
-	uint8_t device_ID;					// RO
-	uint8_t device_addr;        		//
-
+typedef struct{
+	int16_t 		cmd;						// RW
+	uint16_t 		device_ID;					// RO
+	uint8_t 		version_major;				// RO
+	uint8_t 		version_minor;				// RO
+	uint8_t 		config_flags;				// RW
+	uint8_t 		led_mode;					// RW
 } structured_data_t;
 
 typedef union {

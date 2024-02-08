@@ -96,6 +96,8 @@ int main(void)
   MX_TIM2_Init();
   MX_ADC1_Init();
   /* USER CODE BEGIN 2 */
+  init_data();
+  init_led();
   init_driver();
   init_encoder();
 //  enable_CPU_count();
@@ -182,12 +184,6 @@ void SystemClock_Config(void)
 void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
 {
   /* USER CODE BEGIN Callback 0 */
-
-	#ifdef DEBUG_PIN
-	if(htim->Instance == TIM2){
-		HAL_GPIO_TogglePin(DEBUG_2_GPIO_Port, DEBUG_2_Pin);
-	} else
-	#endif
   /* USER CODE END Callback 0 */
   if (htim->Instance == TIM6) {
     HAL_IncTick();
