@@ -1,20 +1,26 @@
-
 // data.h
+
 #ifndef DATA_H
 #define DATA_H
 
-#include "driver.h"
-#include "encoder.h"
-
+#include <stdint.h>
 
 #define DATA_REGISTER_SIZE 256
 
-typedef struct{
-	void *mem_addr;
-	uint8_t len;
-} DATA_REGISTER;
+typedef struct __attribute__((__packed__)){
+	int8_t cmd;							// RW
+	uint8_t device_ID;					// RO
+	uint8_t device_addr;        		//
 
-extern DATA_REGISTER data_register[DATA_REGISTER_SIZE];
+} structured_data_t;
+
+typedef union {
+	uint8_t r[DATA_REGISTER_SIZE];		// Raw
+	structured_data_t s;				// Structured
+} data_register_t;
+
+
+extern data_register_t data_register;
 
 void init_data();
 

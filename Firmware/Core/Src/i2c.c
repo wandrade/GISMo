@@ -147,46 +147,49 @@ void HAL_I2C_MspDeInit(I2C_HandleTypeDef* i2cHandle)
 }
 
 /* USER CODE BEGIN 1 */
+extern data_register_t data_register;
 #define I2C_REG_ADD_SIZE 1
 uint8_t reg_add[I2C_REG_ADD_SIZE];
 
 #define BUFFER_SIZE 5
-uint8_t buffer[BUFFER_SIZE] = {1,2,3,4,5};
 uint8_t tx_index = 0;
 uint8_t rx_index = 0;
 
 extern void HAL_I2C_AddrCallback(I2C_HandleTypeDef *hi2c, uint8_t TransferDirection, uint16_t AddrMatchCode){
 	UNUSED(AddrMatchCode);
-	// If is master write, listen to necessary amount of bytes
+	// Run on first transfer of register then either rerun again when switching to a master read or not
 	if(TransferDirection == I2C_DIRECTION_TRANSMIT){
 		// First write request is always 1 byte of the requested reg address
 		// Will saved it on the first position of I2C_buffer
 		rx_index = 0;
+		tx_index = 0;
+		// Start listening again for the register
 		HAL_I2C_Slave_Sequential_Receive_IT(hi2c, (void*)reg_add, I2C_REG_ADD_SIZE, I2C_FIRST_FRAME);
 	}
 	else {
-		// If a read request is sent by the master, return the value of the data in the requested register that was saved on 1st
-		// position of the I2C buffer
-		HAL_I2C_Slave_Sequential_Transmit_IT(hi2c, buffer + reg_add[0], 1, I2C_FIRST_FRAME);
+		// If a master read request is sent by the master after the register is received, it will reach this point
+		// Start transmitting the buffer at the requested position
+		HAL_I2C_Slave_Sequential_Transmit_IT(hi2c, data_register.r + reg_add[0], 1, I2C_FIRST_FRAME);
 	}
 }
 
 extern void HAL_I2C_SlaveTxCpltCallback(I2C_HandleTypeDef *hi2c) {
     // Transmit complete callback
 	tx_index++;
-	if (tx_index >= BUFFER_SIZE) tx_index = 0; // Wrap-around
-	HAL_I2C_Slave_Sequential_Transmit_IT(hi2c, buffer + tx_index + reg_add[0], 1, I2C_FIRST_AND_NEXT_FRAME);
+	if (tx_index >= DATA_REGISTER_SIZE) tx_index = 0; // Wrap-around
+	HAL_I2C_Slave_Sequential_Transmit_IT(hi2c, data_register.r + tx_index + reg_add[0], 1, I2C_FIRST_AND_NEXT_FRAME);
 }
 
 extern void HAL_I2C_SlaveRxCpltCallback(I2C_HandleTypeDef *hi2c){
 	// This is called after a master 'write' request. first time around it will be a register.
-	HAL_I2C_Slave_Sequential_Receive_IT(hi2c, buffer + rx_index + reg_add[0], 1, I2C_FIRST_AND_NEXT_FRAME);
+	// listen again for the next byte in case the operation is a master write, if its a read this wont do much
+	// and HAL_I2C_AddrCallback is called again for the read
+	// If it IS a master write command, keep receiving bytes until the master ends comms
+	HAL_I2C_Slave_Sequential_Receive_IT(hi2c, data_register.r + rx_index + reg_add[0], 1, I2C_FIRST_AND_NEXT_FRAME);
 	rx_index++;
 }
 
 extern void HAL_I2C_ListenCpltCallback (I2C_HandleTypeDef *hi2c){
-	reg_addr_rcvd = 0;
-	tx_index = 0;
 	HAL_I2C_EnableListen_IT(hi2c);
 }
 
