@@ -9,6 +9,6 @@
 #include "data.h"
 
 void init_led();
-void ledPWMTask(void *);
+void ledPWMTask(void*);
 void ledManagerTask(void*);
 #endif
