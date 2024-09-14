@@ -63,7 +63,7 @@ void ledManagerTask(void* pvParameters){
 			led_dutycycle_b = 1;
             break;
         case 5:
-			led_dutycycle_r = heartbeat(led_dutycycle_g);
+			led_dutycycle_r = heartbeat(led_dutycycle_r);
 			led_dutycycle_g = 0;
 			led_dutycycle_b = 0;
             break;

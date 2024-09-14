@@ -38,9 +38,22 @@ void disable_driver(){
 	HAL_GPIO_WritePin(nSleep_GPIO_Port, nSleep_Pin, 0);
 }
 
-void pwm_set_ouput(uint16_t dutyCycle, uint8_t direction){
-	TIM2->CCR4 = dutyCycle;
-	HAL_GPIO_WritePin(Direction_GPIO_Port, Direction_Pin, direction);
+void pwm_set_output(int32_t value) {
+    uint8_t direction;
+
+    if (value >= 0) {
+        direction = GPIO_PIN_RESET;
+    } else {
+        direction = GPIO_PIN_SET;
+        value = (uint16_t)(-value);
+    }
+
+    if (value > 1000) {
+        value = 1000;
+    }
+
+    TIM2->CCR4 = value;
+    HAL_GPIO_WritePin(Direction_GPIO_Port, Direction_Pin, direction);
 }
 
 void HAL_ADC_ConvCpltCallback(ADC_HandleTypeDef* hadc){
@@ -52,10 +65,10 @@ void HAL_ADC_ConvCpltCallback(ADC_HandleTypeDef* hadc){
 		filtre += current.adc_buffer[i];
 	}
 	// If buffer size is 2^n, then division can be done more efficiently with bit shift
-	// filter/2^n = filtre >> n
+	// filter/2^n = filter >> n
 		current.raw = filtre >> 3;
 		current.value = current.raw*CURRENT_SCALAR;
-	//	current.raw = filtre/CURRENT_BUFF_SIZE;
+	//	current.raw = filter/CURRENT_BUFF_SIZE;
 #ifdef DEBUG_PIN
 	HAL_GPIO_WritePin(DEBUG_3_GPIO_Port, DEBUG_3_Pin,0);
 #endif

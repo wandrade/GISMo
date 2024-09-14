@@ -10,6 +10,7 @@
 
 #include "stm32f3xx_hal.h"
 #include "helper_functions.h"
+#include "data.h"
 #include <math.h>
 
 typedef struct {
@@ -23,7 +24,6 @@ typedef struct {
 
 } ENCODER_STRUCT;
 extern ENCODER_STRUCT encoder;
-
 
 
 void init_encoder();

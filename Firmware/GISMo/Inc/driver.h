@@ -46,7 +46,7 @@ extern TIM_OC_InitTypeDef pwm_config;
 void init_driver();
 void enable_driver();
 void disable_driver();
-//duty cycle 0 to 1000
-void pwm_set_ouput(uint16_t dutyCycle, uint8_t direction);
+//duty cycle -1000 to 1000
+void pwm_set_output(int32_t);
 
 #endif

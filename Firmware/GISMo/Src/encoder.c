@@ -2,7 +2,7 @@
 
 ENCODER_STRUCT encoder;
 extern TIM_HandleTypeDef htim1;
-
+extern data_register_t data_register;
 
 void init_encoder(){
 	  HAL_TIM_IC_Start_IT(&htim1, TIM_CHANNEL_3); // Rising edge
@@ -50,10 +50,13 @@ void update_encoder(TIM_HandleTypeDef* htim){
 
 		// Concatenate singleturn and multiturn counters
 		encoder.raw = (encoder.multiturn_counter << 12) | encoder.single;
+		data_register.s.encoder_raw = encoder.raw;
+		data_register.s.encoder_multiturn = encoder.multiturn_counter;
 
 	} else {
 		encoder.error++; // Counts consecutive errors;
 		if(!encoder.error) encoder.error++; // If overflows, make sure it goes from 0 to 1 again
+		data_register.s.encoder_error = encoder.error;
 	}
 
 }
