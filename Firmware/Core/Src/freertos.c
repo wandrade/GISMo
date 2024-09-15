@@ -23,7 +23,9 @@
 #include "task.h"
 #include "main.h"
 #include "cmsis_os.h"
-
+#include "data.h"
+#include "led.h"
+#include "control.h"
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
 
@@ -130,23 +132,31 @@ uint8_t buf;
 void StartDefaultTask(void const * argument)
 {
   /* USER CODE BEGIN StartDefaultTask */
-  /* Infinite loop */
-	HAL_GPIO_WritePin(LED_R_GPIO_Port, LED_R_Pin, 1);
-	HAL_GPIO_WritePin(LED_G_GPIO_Port, LED_G_Pin, 1);
-	HAL_GPIO_WritePin(LED_B_GPIO_Port, LED_B_Pin, 1);
-	osDelay(200);
-	HAL_GPIO_WritePin(LED_R_GPIO_Port, LED_R_Pin, 0);
-	HAL_GPIO_WritePin(LED_G_GPIO_Port, LED_G_Pin, 0);
-	HAL_GPIO_WritePin(LED_B_GPIO_Port, LED_B_Pin, 0);
-	//	I2C
-	HAL_I2C_EnableListen_IT(&hi2c1);
-	//		enable_i2c_it_DMA();
-//	enable_driver();
-//	pwm_set_ouput(800, 0);
-  for(;;)
-  {
-	  osDelay(5000);
-  }
+	structured_data_t *sdata = &data_register.s;
+    const TickType_t xFrequency = pdMS_TO_TICKS(30); // period for task loop
+    TickType_t xLastWakeTime = xTaskGetTickCount();
+    TaskHandle_t positionLoopTaskHandle = NULL;
+
+	// Variables that hold previous states of configs
+	uint8_t prev_enable_motor = sdata->enable_motor;
+
+	sdata->led_mode = LED_MODE_HEARTBEAT_G;
+	/* Infinite loop */
+	for(;;)
+	{
+		if(prev_enable_motor != sdata->enable_motor){
+			prev_enable_motor = sdata->enable_motor;
+			if(sdata->enable_motor){
+				enable_driver();
+				positionLoopStart(&positionLoopTaskHandle);
+			} else {
+				disable_driver();
+				positionLoopStop(&positionLoopTaskHandle);
+			}
+		}
+		// Sleep till next time
+		vTaskDelayUntil(&xLastWakeTime, xFrequency);
+	}
   /* USER CODE END StartDefaultTask */
 }
 

@@ -15,14 +15,14 @@ void PositionLoopTask(void *pvParameters) {
     // Initialise controller structure every time the task starts
     pid_position.kp = 1500;
     pid_position.ki = 0;
-    pid_position.kd = 0;
+    pid_position.kd = 50;
     pid_position.integral = 0;
     pid_position.out_lim_min = -1500;
     pid_position.out_lim_max = 1500;
     pid_position.previous_error = 0;
 
+    position_filter.window_size = 1;
 
-    data_register.s.led_mode = LED_MODE_HEARTBEAT_G;
     for (;;) {
         if (data_register.s.controller_pos_setpoint != previous_setpoint_degrees) {
             previous_setpoint_degrees = data_register.s.controller_pos_setpoint;
@@ -30,7 +30,7 @@ void PositionLoopTask(void *pvParameters) {
             pid_position.setpoint = (int32_t)(previous_setpoint_degrees * 4096.0 / 360.0);
         }
 
-        pid_position.measured_value = data_register.s.encoder_raw;
+        pid_position.measured_value = moving_avg_filter(&position_filter, data_register.s.encoder_raw);
         calculatePID(&pid_position);
 
         if(pid_position.control_output >= 1000){

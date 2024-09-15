@@ -4,7 +4,7 @@
 
 #include <stdint.h>
 
-#define MAF_BUFFER_SIZE 100
+#define MAF_BUFFER_SIZE 50
 
 typedef struct {
     uint32_t kp;

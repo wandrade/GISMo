@@ -17,6 +17,10 @@ void calculatePID(PID_t *pid) {
 }
 
 uint32_t moving_avg_filter(MAF_t *data, uint32_t value){
+	if(data->window_size <=1){
+	    return value; // No need to average if window is 1 or 0
+	}
+
     data->buffer[data->buffer_start] = value;
     data->buffer_start = (data->buffer_start + 1) % data->window_size;
 

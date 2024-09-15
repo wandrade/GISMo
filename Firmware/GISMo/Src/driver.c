@@ -51,6 +51,10 @@ void pwm_set_output(int32_t value) {
     if (value > 1000) {
         value = 1000;
     }
+	#define MIN_PWM 20
+//    if(value < MIN_PWM && value > 3){
+//    	value = MIN_PWM;
+//    }
 
     TIM2->CCR4 = value;
     HAL_GPIO_WritePin(Direction_GPIO_Port, Direction_Pin, direction);
