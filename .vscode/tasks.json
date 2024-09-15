@@ -1,0 +1,19 @@
+{
+  "version": "2.0.0",
+  "tasks": [
+    {
+      "label": "Build Firmware",
+      "type": "shell",
+      "command": "make",
+      "args": [],
+      "options": {
+        "cwd": "${workspaceFolder}/Firmware"
+      },
+      "group": {
+        "kind": "build",
+        "isDefault": true
+      },
+      "problemMatcher": ["$gcc"],
+    }
+  ]
+}

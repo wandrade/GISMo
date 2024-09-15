@@ -23,11 +23,12 @@
 #include "task.h"
 #include "main.h"
 #include "cmsis_os.h"
+
+/* Private includes ----------------------------------------------------------*/
+/* USER CODE BEGIN Includes */
 #include "data.h"
 #include "led.h"
 #include "control.h"
-/* Private includes ----------------------------------------------------------*/
-/* USER CODE BEGIN Includes */
 
 /* USER CODE END Includes */
 

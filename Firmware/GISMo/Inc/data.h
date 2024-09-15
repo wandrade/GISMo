@@ -8,19 +8,21 @@
 #define DATA_REGISTER_SIZE 256
 
 typedef struct{
+    // RO
     uint16_t        device_ID;                                                  // 0x00
     uint8_t         version_major;                                              // 0x02
     uint8_t         version_minor;                                              // 0x03
     int32_t         encoder_raw;                                                // 0x04
     int32_t         encoder_multiturn;                                          // 0x08
     uint32_t        encoder_error;                                              // 0x0C
+    float           controller_pos_error;                                       // 0x10
 
-    int16_t         cmd;                                                        // 0x10
-    uint8_t         led_mode;                                                   // 0x12
-    uint8_t         enable_motor;                                               // 0x13
-    uint8_t         controller_mode;                                            // 0x14
-    float           controller_pos_setpoint;                                    // 0x15
-    float           controller_pos_error;                                       // 0x19
+    // RW
+    int16_t         cmd;                                                        // 0x14
+    uint8_t         led_mode;                                                   // 0x16
+    uint8_t         enable_motor;                                               // 0x17
+    uint8_t         controller_mode;                                            // 0x18
+    float           controller_pos_setpoint;                                    // 0x19
     int16_t         duty_cycle;                                                 // 0x1D
 } structured_data_t;
 
