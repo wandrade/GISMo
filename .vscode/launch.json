@@ -15,26 +15,6 @@
       "preLaunchTask": "Build Firmware",
       "runToMain": true,
       "svdFile": ""
-    },
-    {
-      "name": "Program STM32",
-      "type": "cortex-debug",
-      "request": "launch",
-      "servertype": "openocd",
-      "cwd": "${workspaceFolder}/Firmware",
-      "executable": "${workspaceFolder}/Firmware/build/Firmware.elf",
-      "configFiles": [
-        "${workspaceFolder}/Firmware/stlink-v2-1.cfg",
-        "${workspaceFolder}/Firmware/stm32f3x.cfg"
-      ],
-      "preLaunchTask": "Build Firmware",
-      "runToMain": false,
-      "postLaunchCommands": [
-        "monitor reset halt",
-        "load",
-        "monitor reset run",
-        "disconnect"
-      ]
     }
   ]
 }

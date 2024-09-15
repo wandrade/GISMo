@@ -15,3 +15,5 @@ install the client on windows host
 (follow instructions on extention page)
 
 sudo apt install openocd
+
+install extension VsCode Action Buttons

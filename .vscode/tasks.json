@@ -13,7 +13,45 @@
         "kind": "build",
         "isDefault": true
       },
-      "problemMatcher": ["$gcc"],
+      "problemMatcher": ["$gcc"]
+    },
+    {
+      "label": "Flash MCU",
+      "type": "shell",
+      "command": "openocd",
+      "args": [
+        "-f", "${workspaceFolder}/Firmware/stlink-v2-1.cfg",
+        "-f", "${workspaceFolder}/Firmware/stm32f3x.cfg",
+        "-c", "program ${workspaceFolder}/Firmware/build/Firmware.elf verify reset exit"
+      ],
+      "group": {
+        "kind": "none"
+      },
+      "problemMatcher": []
+    },
+    {
+      "label": "Build and Flash",
+      "dependsOn": [
+        "Build Firmware",
+        "Flash MCU"
+      ],
+      "group": {
+        "kind": "build",
+        "isDefault": false
+      }
+    },
+    {
+      "label": "Clean Firmware",
+      "type": "shell",
+      "command": "make",
+      "args": ["clean"],
+      "options": {
+        "cwd": "${workspaceFolder}/Firmware"
+      },
+      "group": {
+        "kind": "none"
+      },
+      "problemMatcher": []
     }
   ]
 }

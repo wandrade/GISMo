@@ -1,3 +1,26 @@
 {
-    "makefile.makefilePath": "./Firmware/Makefile"
+  "makefile.makefilePath": "./Firmware/Makefile",
+  "VsCodeTaskButtons.showCounter": true,
+  "VsCodeTaskButtons.tasks": [
+    {
+      "label": "🛠️ Build",
+      "task": "Build Firmware",
+      "tooltip": "🛠️ Start the \"build\" task"
+    },
+    {
+      "label": "🧹 Clean",
+      "task": "Clean Firmware",
+      "tooltip": "🧹 Start a \"clean\" task"
+    },
+    {
+      "label": "🔥 Flash",
+      "task": "Flash Firmware",
+      "tooltip": "🔥 Start a \"Flash\" task"
+    },
+    {
+      "label": "🚀 Build & Flash",
+      "task": "Build and Flash",
+      "tooltip": "🚀 Start a \"Build and Flash\" task"
+    }
+  ]
 }
