@@ -1,0 +1,10 @@
+{
+  "recommendations": [
+    "marus25.cortex-debug",
+    "ms-vscode.cpptools",
+    "ms-vscode.cpptools-extension-pack",
+    "esbenp.prettier-vscode",
+    "thecreativedodo.usbip-connect",
+    "spencerwmiles.vscode-task-buttons"
+  ]
+}

@@ -1,0 +1,74 @@
+{
+    "version": "2.0.0",
+    "tasks": [
+        {
+            "label": "Build Firmware",
+            "type": "shell",
+            "command": "../Scripts/parse_data_header.py GISMo/Inc/data.h; make",
+            "args": [],
+            "options": {
+                "cwd": "${workspaceFolder}/Firmware"
+            },
+            "group": {
+                "kind": "build",
+                "isDefault": true
+            },
+            "problemMatcher": ["$gcc"]
+        },
+        {
+            "label": "Flash MCU",
+            "type": "shell",
+            "command": "openocd",
+            "args": [
+                "-f",
+                "${workspaceFolder}/Firmware/stlink-v2-1.cfg",
+                "-f",
+                "${workspaceFolder}/Firmware/stm32f3x.cfg",
+                "-c",
+                "program ${workspaceFolder}/Firmware/build/Firmware.elf verify reset exit"
+            ],
+            "group": {
+                "kind": "none"
+            },
+            "problemMatcher": []
+        },
+        {
+            "label": "Build and Flash",
+            "dependsOn": ["Build Firmware", "Flash MCU"],
+            "group": {
+                "kind": "build",
+                "isDefault": false
+            }
+        },
+        {
+            "label": "Clean Firmware",
+            "type": "shell",
+            "command": "make",
+            "args": ["clean"],
+            "options": {
+                "cwd": "${workspaceFolder}/Firmware"
+            },
+            "group": {
+                "kind": "none"
+            },
+            "problemMatcher": []
+        },
+        {
+            "label": "Parse Data Header",
+            "type": "shell",
+            "command": "./Scripts/parse_data_header.py",
+            "args": [],
+            "options": {
+                "cwd": "${workspaceFolder}"
+            },
+            "group": {
+                "kind": "none"
+            },
+            "problemMatcher": [],
+            "presentation": {
+                "reveal": "always",
+                "panel": "shared"
+            }
+        }
+    ]
+}

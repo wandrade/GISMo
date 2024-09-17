@@ -1,0 +1,36 @@
+{
+    "editor.defaultFormatter": "esbenp.prettier-vscode",
+    "editor.tabSize": 4,
+    "editor.insertSpaces": true,
+    "editor.detectIndentation": true,
+    "editor.formatOnSave": true,
+    "prettier.useTabs": false,
+    "prettier.tabWidth": 4,
+    "makefile.makefilePath": "./Firmware/Makefile",
+    "VsCodeTaskButtons.showCounter": true,
+    "VsCodeTaskButtons.tasks": [
+        {
+            "label": "🛠️ Build",
+            "task": "Build Firmware",
+            "tooltip": "🛠️ Start the \"build\" task"
+        },
+        {
+            "label": "🧹 Clean",
+            "task": "Clean Firmware",
+            "tooltip": "🧹 Start a \"clean\" task"
+        },
+        {
+            "label": "🔥 Flash",
+            "task": "Flash Firmware",
+            "tooltip": "🔥 Start a \"Flash\" task"
+        },
+        {
+            "label": "📊 Parse Reg",
+            "task": "Parse data registers header",
+            "tooltip": "📊 Start a \"Parse Data Header\" task"
+        }
+    ],
+    "[c]": {
+        "editor.defaultFormatter": "xaver.clang-format"
+    }
+}

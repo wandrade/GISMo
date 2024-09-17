@@ -21,6 +21,7 @@
 #include "i2c.h"
 
 /* USER CODE BEGIN 0 */
+#include "data.h"
 
 /* USER CODE END 0 */
 

@@ -1,0 +1,35 @@
+[
+    {
+      "key": "ctrl+alt+b",
+      "command": "workbench.action.tasks.runTask",
+      "args": "Build Firmware",
+      "when": "editorTextFocus"
+    },
+    {
+      "key": "ctrl+alt+f",
+      "command": "workbench.action.tasks.runTask",
+      "args": "Flash MCU",
+      "when": "editorTextFocus"
+    },
+    {
+      "key": "ctrl+alt+shift+b",
+      "command": "workbench.action.tasks.runTask",
+      "args": "Build and Flash",
+      "when": "editorTextFocus"
+    },
+    {
+      "key": "ctrl+alt+d",
+      "command": "workbench.action.debug.start",
+      "args": {
+        "name": "Debug Firmware"
+      },
+      "when": "editorTextFocus"
+    },
+    {
+      "key": "ctrl+alt+c",
+      "command": "workbench.action.tasks.runTask",
+      "args": "Clean Firmware",
+      "when": "editorTextFocus"
+    }
+  ]
+  
