@@ -9,7 +9,7 @@ void init_data() {
     d->device_ID                     = 0x5541;
     d->version_major                 = 1;
     d->version_minor                 = 0;
-    d->commit_hash                   = 0x1148fe55;
+    d->commit_hash                   = 0x00000000;
     d->led_mode                      = LED_MODE_OFF;
     d->controller_pos_kp             = 1500;
     d->controller_pos_ki             = 10;
