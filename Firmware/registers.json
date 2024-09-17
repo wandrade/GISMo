@@ -18,110 +18,128 @@
         "size": 1
     },
     {
-        "name": "encoder_raw",
+        "name": "commit_hash",
         "register": "0x04",
-        "type": "int32_t",
+        "type": "uint32_t",
         "size": 4
     },
     {
-        "name": "encoder_multiturn",
+        "name": "encoder_raw",
         "register": "0x08",
         "type": "int32_t",
         "size": 4
     },
     {
-        "name": "encoder_error",
+        "name": "encoder_multiturn",
         "register": "0x0C",
+        "type": "int32_t",
+        "size": 4
+    },
+    {
+        "name": "encoder_error",
+        "register": "0x10",
         "type": "uint32_t",
         "size": 4
     },
     {
         "name": "controller_pos_error",
-        "register": "0x10",
+        "register": "0x14",
         "type": "float",
         "size": 4
     },
     {
         "name": "cmd",
-        "register": "0x14",
+        "register": "0x18",
         "type": "int16_t",
         "size": 2
     },
     {
         "name": "led_mode",
-        "register": "0x16",
+        "register": "0x1A",
         "type": "uint8_t",
         "size": 1
     },
     {
         "name": "enable_motor",
-        "register": "0x17",
+        "register": "0x1B",
         "type": "uint8_t",
         "size": 1
     },
     {
         "name": "controller_mode",
-        "register": "0x18",
+        "register": "0x1C",
         "type": "uint8_t",
         "size": 1
     },
     {
         "name": "controller_pos_setpoint",
-        "register": "0x19",
+        "register": "0x1D",
         "type": "float",
         "size": 4
     },
     {
-        "name": "controller_pos_kp",
-        "register": "0x1D",
-        "type": "uint32_t",
-        "size": 4
-    },
-    {
-        "name": "controller_pos_ki",
+        "name": "controller_pos_setpoint_scale",
         "register": "0x21",
-        "type": "uint32_t",
+        "type": "float",
         "size": 4
     },
     {
-        "name": "controller_pos_kd",
+        "name": "controller_pos_setpoint_scaled",
         "register": "0x25",
         "type": "uint32_t",
         "size": 4
     },
     {
-        "name": "controller_pos_integral",
+        "name": "controller_pos_kp",
         "register": "0x29",
-        "type": "int32_t",
+        "type": "uint32_t",
         "size": 4
     },
     {
-        "name": "controller_pos_out_lim_min",
+        "name": "controller_pos_ki",
         "register": "0x2D",
-        "type": "int32_t",
+        "type": "uint32_t",
         "size": 4
     },
     {
-        "name": "controller_pos_out_lim_max",
+        "name": "controller_pos_kd",
         "register": "0x31",
-        "type": "int32_t",
+        "type": "uint32_t",
         "size": 4
     },
     {
-        "name": "controller_pos_previous_error",
+        "name": "controller_pos_integral",
         "register": "0x35",
         "type": "int32_t",
         "size": 4
     },
     {
-        "name": "position_filter_window_size",
+        "name": "controller_pos_out_lim_min",
         "register": "0x39",
+        "type": "int32_t",
+        "size": 4
+    },
+    {
+        "name": "controller_pos_out_lim_max",
+        "register": "0x3D",
+        "type": "int32_t",
+        "size": 4
+    },
+    {
+        "name": "controller_pos_previous_error",
+        "register": "0x41",
+        "type": "int32_t",
+        "size": 4
+    },
+    {
+        "name": "position_filter_window_size",
+        "register": "0x45",
         "type": "uint8_t",
         "size": 1
     },
     {
         "name": "duty_cycle",
-        "register": "0x3A",
+        "register": "0x46",
         "type": "int16_t",
         "size": 2
     }

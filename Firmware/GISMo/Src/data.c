@@ -7,8 +7,9 @@ structured_data_t* d = &data_register.s;
 
 void init_data() {
     d->device_ID                     = 0x5541;
-    d->version_major                 = 0;
-    d->version_minor                 = 1;
+    d->version_major                 = 1;
+    d->version_minor                 = 0;
+    d->commit_hash                   = 0x19217ded;
     d->led_mode                      = LED_MODE_OFF;
     d->controller_pos_kp             = 1500;
     d->controller_pos_ki             = 10;

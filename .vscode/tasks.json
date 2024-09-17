@@ -16,7 +16,7 @@
             "problemMatcher": ["$gcc"]
         },
         {
-            "label": "Flash MCU",
+            "label": "Flash Firmware",
             "type": "shell",
             "command": "openocd",
             "args": [
@@ -54,9 +54,9 @@
             "problemMatcher": []
         },
         {
-            "label": "Parse Data Header",
+            "label": "Parse data registers header",
             "type": "shell",
-            "command": "./Scripts/parse_data_header.py",
+            "command": "./Firmware/Scripts/prepare_build.py",
             "args": [],
             "options": {
                 "cwd": "${workspaceFolder}"
