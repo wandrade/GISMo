@@ -16,20 +16,22 @@ typedef struct {
     uint32_t encoder_error;        // 0x0C
     float    controller_pos_error; // 0x10
     // RW
-    int16_t  cmd;                           // 0x14
-    uint8_t  led_mode;                      // 0x16
-    uint8_t  enable_motor;                  // 0x17
-    uint8_t  controller_mode;               // 0x18
-    float    controller_pos_setpoint;       // 0x19
-    uint32_t controller_pos_kp;             // 0x1D
-    uint32_t controller_pos_ki;             // 0x21
-    uint32_t controller_pos_kd;             // 0x25
-    int32_t  controller_pos_integral;       // 0x29
-    int32_t  controller_pos_out_lim_min;    // 0x2D
-    int32_t  controller_pos_out_lim_max;    // 0x31
-    int32_t  controller_pos_previous_error; // 0x35
-    uint8_t  position_filter_window_size;   // 0x39
-    int16_t  duty_cycle;                    // 0x3A
+    int16_t  cmd;                            // 0x14
+    uint8_t  led_mode;                       // 0x16
+    uint8_t  enable_motor;                   // 0x17
+    uint8_t  controller_mode;                // 0x18
+    float    controller_pos_setpoint;        // 0x19
+    float    controller_pos_setpoint_scale;  // 0x1D
+    uint32_t controller_pos_setpoint_scaled; // 0x21
+    uint32_t controller_pos_kp;              // 0x25
+    uint32_t controller_pos_ki;              // 0x29
+    uint32_t controller_pos_kd;              // 0x2D
+    int32_t  controller_pos_integral;        // 0x31
+    int32_t  controller_pos_out_lim_min;     // 0x35
+    int32_t  controller_pos_out_lim_max;     // 0x39
+    int32_t  controller_pos_previous_error;  // 0x3D
+    uint8_t  position_filter_window_size;    // 0x41
+    int16_t  duty_cycle;                     // 0x42
 } structured_data_t;
 
 typedef union {
