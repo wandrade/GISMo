@@ -6,11 +6,12 @@
                 "${workspaceFolder}/Firmware/**",
                 "${workspaceFolder}/Firmware/Drivers/STM32F3xx_HAL_Driver/Inc",
                 "${workspaceFolder}/Firmware/Drivers/CMSIS/Include",
-                "${workspaceFolder}/Firmware/Drivers/CMSIS/Device/ST/STM32F3xx/Include"
+                "${workspaceFolder}/Firmware/Drivers/CMSIS/Device/ST/STM32F3xx/Include",
+                "/usr/share/arm-toolchain/arm-gnu-toolchain-13.3.rel1-x86_64-arm-none-eabi/include",
+                "/usr/include",
+                "/usr/local/include"
             ],
-            "defines": [
-                "STM32F3xx"
-            ],
+            "defines": ["STM32F3xx"],
             "compilerPath": "/usr/share/arm-toolchain/arm-gnu-toolchain-13.3.rel1-x86_64-arm-none-eabi/bin/arm-none-eabi-gcc",
             "cStandard": "c11",
             "cppStandard": "c++17",

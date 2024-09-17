@@ -1,0 +1,128 @@
+[
+    {
+        "name": "device_ID",
+        "register": "0x00",
+        "type": "uint16_t",
+        "size": 2
+    },
+    {
+        "name": "version_major",
+        "register": "0x02",
+        "type": "uint8_t",
+        "size": 1
+    },
+    {
+        "name": "version_minor",
+        "register": "0x03",
+        "type": "uint8_t",
+        "size": 1
+    },
+    {
+        "name": "encoder_raw",
+        "register": "0x04",
+        "type": "int32_t",
+        "size": 4
+    },
+    {
+        "name": "encoder_multiturn",
+        "register": "0x08",
+        "type": "int32_t",
+        "size": 4
+    },
+    {
+        "name": "encoder_error",
+        "register": "0x0C",
+        "type": "uint32_t",
+        "size": 4
+    },
+    {
+        "name": "controller_pos_error",
+        "register": "0x10",
+        "type": "float",
+        "size": 4
+    },
+    {
+        "name": "cmd",
+        "register": "0x14",
+        "type": "int16_t",
+        "size": 2
+    },
+    {
+        "name": "led_mode",
+        "register": "0x16",
+        "type": "uint8_t",
+        "size": 1
+    },
+    {
+        "name": "enable_motor",
+        "register": "0x17",
+        "type": "uint8_t",
+        "size": 1
+    },
+    {
+        "name": "controller_mode",
+        "register": "0x18",
+        "type": "uint8_t",
+        "size": 1
+    },
+    {
+        "name": "controller_pos_setpoint",
+        "register": "0x19",
+        "type": "float",
+        "size": 4
+    },
+    {
+        "name": "controller_pos_kp",
+        "register": "0x1D",
+        "type": "uint32_t",
+        "size": 4
+    },
+    {
+        "name": "controller_pos_ki",
+        "register": "0x21",
+        "type": "uint32_t",
+        "size": 4
+    },
+    {
+        "name": "controller_pos_kd",
+        "register": "0x25",
+        "type": "uint32_t",
+        "size": 4
+    },
+    {
+        "name": "controller_pos_integral",
+        "register": "0x29",
+        "type": "int32_t",
+        "size": 4
+    },
+    {
+        "name": "controller_pos_out_lim_min",
+        "register": "0x2D",
+        "type": "int32_t",
+        "size": 4
+    },
+    {
+        "name": "controller_pos_out_lim_max",
+        "register": "0x31",
+        "type": "int32_t",
+        "size": 4
+    },
+    {
+        "name": "controller_pos_previous_error",
+        "register": "0x35",
+        "type": "int32_t",
+        "size": 4
+    },
+    {
+        "name": "position_filter_window_size",
+        "register": "0x39",
+        "type": "uint8_t",
+        "size": 1
+    },
+    {
+        "name": "duty_cycle",
+        "register": "0x3A",
+        "type": "int16_t",
+        "size": 2
+    }
+]

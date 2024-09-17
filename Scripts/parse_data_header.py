@@ -1,3 +1,5 @@
+#!/usr/bin/env python3
+
 import sys
 import re
 import json
@@ -50,10 +52,10 @@ def process_file(file_path):
     with open(file_path, 'w') as file:
         file.writelines(processed_lines)
 
-    with open('registers.json', 'w') as json_file:
+    with open('./Firmware/registers.json', 'w') as json_file:
         json.dump(register_info, json_file, indent=4)
 
 if __name__ == "__main__":
-    default_file_path = '.\Firmware\GISMo\Inc\data.h'
+    default_file_path = './Firmware/GISMo/Inc/data.h'
     file_path = sys.argv[1] if len(sys.argv) > 1 else default_file_path
     process_file(file_path)
