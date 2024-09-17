@@ -27,6 +27,20 @@ def process_file(file_path):
     processed_lines = []
     register_info = []
 
+    
+    # Get current git commit hash
+    commit_hash = subprocess.check_output(['git', 'rev-parse', 'HEAD']).decode().strip()
+    # Check if the repository is clean
+    is_clean = subprocess.check_output(['git', 'status', '--porcelain']).decode().strip() == ''
+    # Update d->commit_hash in data.c
+    short_commit_hash = commit_hash[:7]  # Get the first 7 characters of the commit hash
+    formatted_commit_hash = f'{"0x0" if is_clean else "0x1"}{short_commit_hash}'
+    for i, line in enumerate(updated_data_c_lines):
+        if 'd->commit_hash' in line:
+            updated_data_c_lines[i] = re.sub(r'commit_hash\s*=\s*0x[0-9A-Fa-f]+', f'commit_hash = {formatted_commit_hash}', line)
+    with open(data_c_file_path, 'w') as data_c_file:
+        data_c_file.writelines(updated_data_c_lines)
+
     for line in lines:
         if 'typedef struct' in line:
             struct_start = True
@@ -72,19 +86,6 @@ def process_file(file_path):
         elif 'd->version_minor' in line:
             line = re.sub(r'version_minor\s*=\s*\d+', f'version_minor = {version.split(".")[1]}', line)
         updated_data_c_lines.append(line)
-    
-    # Get current git commit hash
-    commit_hash = subprocess.check_output(['git', 'rev-parse', 'HEAD']).decode().strip()
-    # Check if the repository is clean
-    is_clean = subprocess.check_output(['git', 'status', '--porcelain']).decode().strip() == ''
-    # Update d->commit_hash in data.c
-    short_commit_hash = commit_hash[:7]  # Get the first 7 characters of the commit hash
-    formatted_commit_hash = f'{"0x0" if is_clean else "0x1"}{short_commit_hash}'
-    for i, line in enumerate(updated_data_c_lines):
-        if 'd->commit_hash' in line:
-            updated_data_c_lines[i] = re.sub(r'commit_hash\s*=\s*0x[0-9A-Fa-f]+', f'commit_hash = {formatted_commit_hash}', line)
-    with open(data_c_file_path, 'w') as data_c_file:
-        data_c_file.writelines(updated_data_c_lines)
 
     # Format data.c and data.h using .clang-format
     clang_format_command = ['clang-format', '-i', './Firmware/GISMo/Src/data.c', './Firmware/GISMo/Inc/data.h']
